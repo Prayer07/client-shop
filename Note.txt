@@ -1,0 +1,22 @@
+src/
+├── admin/
+│   ├── Login.tsx
+│   └── Dashboard.tsx
+├── components/
+│   ├── BuyModal.tsx
+│   ├── Navbar.tsx
+│   ├── Footer.tsx
+│   ├── ProductCard.tsx
+│   └── SearchBar.tsx
+├── lib/
+│   └── supabase.ts
+├── pages/
+│   ├── Home.tsx
+│   ├── Portfolio.tsx
+│   ├── Shop.tsx
+│   └── Contact.tsx
+├── types/
+│   └── index.ts
+├── App.tsx
+├── main.tsx
+└── index.css
