@@ -13,6 +13,8 @@ html {
 }
 
 body {
+  background-color: #F7F3EE;
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
+  color: #4A3A32;
 }

@@ -7,27 +7,25 @@ const navLinks = [
   { label: 'Portfolio', path: '/portfolio' },
   { label: 'Shop', path: '/shop' },
   { label: 'Contact', path: '/contact' },
-  // { label: 'Admin', path: '/admin' },
 ]
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Check session on mount
-    supabase.auth.getSession().then(({ data }) => {
-      setIsAdmin(!!data.session)
-    })
-
-    // Listen for login/logout changes
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAdmin(!!session)
-    })
-
+    supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session))
+    const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => setIsAdmin(!!session))
     return () => listener.subscription.unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   const handleLogout = async () => {
@@ -36,11 +34,11 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
-      <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <nav className={`sticky top-0 z-50 transition-shadow bg-cream ${scrolled ? 'shadow-md' : 'border-b border-blush/40'}`}>
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
 
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold tracking-tight text-gray-900">
+        <Link to="/" className="font-serif text-2xl font-bold text-brown tracking-wide">
           BrandName
         </Link>
 
@@ -50,10 +48,10 @@ export default function Navbar() {
             <li key={link.path}>
               <Link
                 to={link.path}
-                className={`text-sm font-medium transition-colors hover:text-black ${
+                className={`text-sm font-medium tracking-wide transition-colors hover:text-gold ${
                   location.pathname === link.path
-                    ? 'text-black border-b-2 border-black pb-0.5'
-                    : 'text-gray-500'
+                    ? 'text-gold border-b-2 border-gold pb-0.5'
+                    : 'text-taupe'
                 }`}
               >
                 {link.label}
@@ -61,16 +59,15 @@ export default function Navbar() {
             </li>
           ))}
 
-          {/* Admin only links */}
           {isAdmin && (
             <>
               <li>
                 <Link
                   to="/admin/dashboard"
-                  className={`text-sm font-medium transition-colors hover:text-black ${
+                  className={`text-sm font-medium tracking-wide transition-colors hover:text-gold ${
                     location.pathname === '/admin/dashboard'
-                      ? 'text-black border-b-2 border-black pb-0.5'
-                      : 'text-gray-500'
+                      ? 'text-gold border-b-2 border-gold pb-0.5'
+                      : 'text-taupe'
                   }`}
                 >
                   Dashboard
@@ -79,7 +76,7 @@ export default function Navbar() {
               <li>
                 <button
                   onClick={handleLogout}
-                  className="text-sm font-medium text-red-400 hover:text-red-600 transition-colors"
+                  className="text-sm font-medium text-blush hover:text-brown transition-colors"
                 >
                   Sign Out
                 </button>
@@ -93,40 +90,36 @@ export default function Navbar() {
           className="md:hidden flex flex-col gap-1.5 p-1"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <span className={`block w-6 h-0.5 bg-gray-800 transition-all ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
-          <span className={`block w-6 h-0.5 bg-gray-800 transition-all ${isOpen ? 'opacity-0' : ''}`} />
-          <span className={`block w-6 h-0.5 bg-gray-800 transition-all ${isOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+          <span className={`block w-6 h-0.5 bg-brown transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
+          <span className={`block w-6 h-0.5 bg-brown transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
+          <span className={`block w-6 h-0.5 bg-brown transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2' : ''}`} />
         </button>
       </div>
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white px-4 pb-4">
+        <div className="md:hidden border-t border-blush/30 bg-cream px-6 pb-5">
           <ul className="flex flex-col gap-4 pt-4">
             {navLinks.map(link => (
               <li key={link.path}>
                 <Link
                   to={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`text-sm font-medium transition-colors hover:text-black ${
-                    location.pathname === link.path ? 'text-black' : 'text-gray-500'
+                  className={`text-sm font-medium tracking-wide transition-colors hover:text-gold ${
+                    location.pathname === link.path ? 'text-gold' : 'text-taupe'
                   }`}
                 >
                   {link.label}
                 </Link>
               </li>
             ))}
-
-            {/* Admin only — mobile */}
             {isAdmin && (
               <>
                 <li>
                   <Link
                     to="/admin/dashboard"
                     onClick={() => setIsOpen(false)}
-                    className={`text-sm font-medium transition-colors hover:text-black ${
-                      location.pathname === '/admin/dashboard' ? 'text-black' : 'text-gray-500'
-                    }`}
+                    className="text-sm font-medium text-taupe hover:text-gold transition-colors"
                   >
                     Dashboard
                   </Link>
@@ -134,7 +127,7 @@ export default function Navbar() {
                 <li>
                   <button
                     onClick={() => { setIsOpen(false); handleLogout() }}
-                    className="text-sm font-medium text-red-400 hover:text-red-600 transition-colors"
+                    className="text-sm font-medium text-blush hover:text-brown transition-colors"
                   >
                     Sign Out
                   </button>

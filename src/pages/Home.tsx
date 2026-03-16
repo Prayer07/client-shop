@@ -10,7 +10,6 @@ const fetchFeaturedProducts = async (): Promise<Product[]> => {
     .select('*')
     .order('created_at', { ascending: false })
     .limit(4)
-
   if (error) throw new Error(error.message)
   return data
 }
@@ -25,30 +24,28 @@ export default function Home() {
     <div className="flex flex-col">
 
       {/* Hero */}
-      <section className="bg-gray-50 border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-20 flex flex-col items-center text-center">
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
+      <section className="bg-blush/30 border-b border-blush/40">
+        <div className="max-w-6xl mx-auto px-6 py-24 flex flex-col items-center text-center">
+          <span className="text-xs font-semibold text-gold uppercase tracking-widest mb-5">
             Welcome
           </span>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight max-w-2xl">
-            {/* ← Swap with client's actual headline */}
+          <h1 className="font-serif text-4xl md:text-6xl font-bold text-brown leading-tight max-w-2xl">
             Your Brand Headline Goes Here
           </h1>
-          <p className="text-gray-500 mt-4 text-base leading-relaxed max-w-xl">
-            {/* ← Swap with client's tagline or short description */}
+          <p className="text-taupe mt-5 text-base leading-relaxed max-w-xl">
             A short description of what your client does and who she serves.
-            Make it punchy and personal.
+            Make it warm, personal and inviting.
           </p>
-          <div className="flex gap-3 mt-8">
+          <div className="flex gap-4 mt-10">
             <Link
               to="/shop"
-              className="bg-gray-900 text-white text-sm font-medium px-6 py-3 rounded-full hover:bg-gray-700 transition-colors"
+              className="bg-brown text-cream text-sm font-medium px-8 py-3 rounded-full hover:bg-brown/80 transition-colors tracking-wide"
             >
               Shop Now
             </Link>
             <Link
               to="/portfolio"
-              className="border border-gray-300 text-gray-700 text-sm font-medium px-6 py-3 rounded-full hover:border-gray-900 hover:text-gray-900 transition-colors"
+              className="border border-brown/30 text-brown text-sm font-medium px-8 py-3 rounded-full hover:border-brown hover:bg-brown/5 transition-colors tracking-wide"
             >
               View Portfolio
             </Link>
@@ -56,16 +53,28 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Divider Strip */}
+      <div className="bg-gold/10 border-y border-gold/20 py-4">
+        <div className="max-w-6xl mx-auto px-6 flex items-center justify-center gap-3">
+          <span className="w-16 h-px bg-gold/40" />
+          <span className="text-gold text-xs uppercase tracking-widest font-medium">
+            Handcrafted with love
+          </span>
+          <span className="w-16 h-px bg-gold/40" />
+        </div>
+      </div>
+
       {/* Featured Products */}
-      <section className="max-w-6xl mx-auto px-4 py-16 w-full">
-        <div className="flex items-center justify-between mb-8">
+      <section className="max-w-6xl mx-auto px-6 py-20 w-full">
+        <div className="flex items-end justify-between mb-10">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Featured Products</h2>
-            <p className="text-gray-500 text-sm mt-1">Our latest and most popular items</p>
+            <span className="text-xs font-semibold text-gold uppercase tracking-widest">Collection</span>
+            <h2 className="font-serif text-3xl font-bold text-brown mt-1">Featured Products</h2>
+            <p className="text-taupe text-sm mt-2">Our latest and most loved items</p>
           </div>
           <Link
             to="/shop"
-            className="text-sm font-medium text-gray-900 underline underline-offset-2 hover:text-gray-600 transition-colors"
+            className="text-sm font-medium text-brown underline underline-offset-4 decoration-gold hover:text-gold transition-colors"
           >
             View All
           </Link>
@@ -73,42 +82,67 @@ export default function Home() {
 
         {/* Loading Skeleton */}
         {isLoading && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="rounded-2xl bg-gray-100 animate-pulse aspect-square" />
+              <div key={i} className="rounded-2xl bg-blush/30 animate-pulse aspect-square" />
             ))}
           </div>
         )}
 
         {/* Products */}
         {!isLoading && featured && featured.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
             {featured.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         )}
 
-        {/* No products yet */}
+        {/* Empty */}
         {!isLoading && (!featured || featured.length === 0) && (
-          <div className="text-center py-16 text-gray-400 text-sm">
+          <div className="text-center py-16 text-taupe text-sm">
             Products coming soon. Check back shortly!
           </div>
         )}
       </section>
 
-      {/* About / CTA Strip */}
-      <section className="bg-gray-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 py-16 flex flex-col md:flex-row items-center justify-between gap-6">
+      {/* About Strip */}
+      <section className="bg-blush/20 border-y border-blush/40">
+        <div className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <div>
-            <h2 className="text-2xl font-bold mb-2">Have a custom request?</h2>
-            <p className="text-gray-400 text-sm leading-relaxed max-w-md">
-              Reach out and let's talk about what you need. We're always happy to work on something special.
+            <span className="text-xs font-semibold text-gold uppercase tracking-widest">About</span>
+            <h2 className="font-serif text-3xl font-bold text-brown mt-2 mb-4">
+              A little about the brand
+            </h2>
+            <p className="text-taupe text-sm leading-relaxed">
+              This is a short paragraph about your client, her story, what she does,
+              and what makes her brand special. Keep it warm, personal and authentic.
+              Replace this with her actual story when she provides it.
+            </p>
+          </div>
+          <div className="flex justify-center md:justify-end">
+            <div className="w-64 h-64 rounded-full bg-blush/50 border-4 border-cream flex items-center justify-center text-taupe text-sm">
+              Brand Photo
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Strip */}
+      <section className="bg-brown">
+        <div className="max-w-6xl mx-auto px-6 py-16 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <h2 className="font-serif text-2xl font-bold text-cream mb-2">
+              Have a custom request?
+            </h2>
+            <p className="text-cream/60 text-sm leading-relaxed max-w-md">
+              Reach out and let's talk about what you need. We're always happy
+              to work on something special just for you.
             </p>
           </div>
           <Link
             to="/contact"
-            className="bg-white text-gray-900 text-sm font-medium px-6 py-3 rounded-full hover:bg-gray-100 transition-colors shrink-0"
+            className="bg-gold text-brown text-sm font-semibold px-8 py-3 rounded-full hover:bg-gold/80 transition-colors tracking-wide shrink-0"
           >
             Contact Us
           </Link>

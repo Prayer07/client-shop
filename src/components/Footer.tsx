@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 
-// ← Drop your client's social links here when she provides them
 const socialLinks = [
   { label: 'Instagram', url: 'https://instagram.com/placeholder' },
   { label: 'Facebook', url: 'https://facebook.com/placeholder' },
@@ -9,39 +8,50 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-400 mt-auto">
-      <div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-        
+    <footer className="bg-brown text-cream/70 mt-auto">
+      <div className="max-w-6xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-3 gap-10">
+
         {/* Brand */}
         <div>
-          <h3 className="text-white font-bold text-lg mb-2">BrandName</h3>
-          <p className="text-sm leading-relaxed">
+          <h3 className="font-serif text-cream text-xl font-bold mb-3 tracking-wide">BrandName</h3>
+          <p className="text-sm leading-relaxed text-cream/60">
             A short tagline or description about the brand goes here.
           </p>
         </div>
 
         {/* Quick Links */}
         <div>
-          <h4 className="text-white font-semibold mb-3">Quick Links</h4>
-          <ul className="flex flex-col gap-2 text-sm">
-            <li><Link to="/" className="hover:text-white transition-colors">Home</Link></li>
-            <li><Link to="/portfolio" className="hover:text-white transition-colors">Portfolio</Link></li>
-            <li><Link to="/shop" className="hover:text-white transition-colors">Shop</Link></li>
-            <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+          <h4 className="text-cream font-semibold mb-4 text-sm uppercase tracking-widest">Quick Links</h4>
+          <ul className="flex flex-col gap-2.5 text-sm">
+            {[
+              { label: 'Home', path: '/' },
+              { label: 'Portfolio', path: '/portfolio' },
+              { label: 'Shop', path: '/shop' },
+              { label: 'Contact', path: '/contact' },
+            ].map(link => (
+              <li key={link.path}>
+                <Link
+                  to={link.path}
+                  className="hover:text-gold transition-colors"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
         {/* Socials */}
         <div>
-          <h4 className="text-white font-semibold mb-3">Follow Us</h4>
-          <ul className="flex flex-col gap-2 text-sm">
+          <h4 className="text-cream font-semibold mb-4 text-sm uppercase tracking-widest">Follow Us</h4>
+          <ul className="flex flex-col gap-2.5 text-sm">
             {socialLinks.map(social => (
               <li key={social.label}>
                 <a
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-gold transition-colors"
                 >
                   {social.label}
                 </a>
@@ -52,7 +62,8 @@ export default function Footer() {
 
       </div>
 
-      <div className="border-t border-gray-800 text-center text-xs py-4 text-gray-600">
+      {/* Bottom bar */}
+      <div className="border-t border-cream/10 text-center text-xs py-5 text-cream/30 tracking-wide">
         © {new Date().getFullYear()} BrandName. All rights reserved.
       </div>
     </footer>
