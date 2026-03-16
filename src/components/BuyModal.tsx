@@ -33,10 +33,10 @@ export default function BuyModal({ product, onClose }: Props) {
   const onSubmit = (data: FormData) => {
     const message = encodeURIComponent(
       `Hello! I'd like to order the following:\n\n` +
-      `🛍️ Product: ${product.name}\n` +
-      `💰 Price: $${product.price.toFixed(2)} CAD\n\n` +
-      `👤 My Name: ${data.name}\n` +
-      `📞 My Number: ${data.phone}`
+      `Product: ${product.name}\n` +
+      `Price: $${product.price.toFixed(2)} CAD\n\n` +
+      `My Name: ${data.name}\n` +
+      `My Number: ${data.phone}`
     )
     window.open(`https://wa.me/${CLIENT_WHATSAPP}?text=${message}`, '_blank')
     setSubmitted(true)
