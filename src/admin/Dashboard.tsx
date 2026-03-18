@@ -25,6 +25,45 @@ interface EditState {
   imagePreview: string | null
 }
 
+function NewsletterSubscribers() {
+  const [subscribers, setSubscribers] = useState<{ id: string; email: string; subscribed_at: string }[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    supabase
+      .from('newsletter_subscribers')
+      .select('*')
+      .order('subscribed_at', { ascending: false })
+      .then(({ data }) => {
+        if (data) setSubscribers(data)
+        setLoading(false)
+      })
+  }, [])
+
+  if (loading) return <div className="h-16 rounded-xl bg-blush/30 animate-pulse" />
+
+  if (subscribers.length === 0)
+    return <p className="text-sm text-taupe">No subscribers yet.</p>
+
+  return (
+    <div className="bg-white border border-blush/40 rounded-2xl shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-3 border-b border-blush/20">
+        <p className="text-xs text-taupe">{subscribers.length} subscriber{subscribers.length !== 1 ? 's' : ''}</p>
+      </div>
+      <div className="divide-y divide-blush/20 max-h-72 overflow-y-auto">
+        {subscribers.map(s => (
+          <div key={s.id} className="flex items-center justify-between px-5 py-3">
+            <p className="text-sm text-brown">{s.email}</p>
+            <p className="text-xs text-taupe">
+              {new Date(s.subscribed_at).toLocaleDateString()}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function Dashboard() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -172,7 +211,15 @@ export default function Dashboard() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        {/* Newsletter Subscribers */}
+        <div className="mt-14">
+          <div className="mb-5">
+            <span className="text-xs font-semibold text-gold uppercase tracking-widest">Email List</span>
+            <h2 className="font-serif text-xl font-bold text-brown mt-1">Newsletter Subscribers</h2>
+          </div>
+          <NewsletterSubscribers />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 mt-14">
 
           {/* Add Product Form */}
           <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-7">

@@ -4,9 +4,11 @@ import { supabase } from '../lib/supabase'
 
 const navLinks = [
   { label: 'Home', path: '/' },
-  { label: 'Portfolio', path: '/portfolio' },
-  { label: 'Shop', path: '/shop' },
-  { label: 'Contact', path: '/contact' },
+  { label: 'Consultation', path: '/consultation' },
+  { label: 'My Portfolio', path: '/portfolio' },
+  { label: 'Services', path: '/services' },
+  { label: 'Contact-Us', path: '/contact' },
+  { label: 'Newsletter', path: '/newsletter' },
 ]
 
 export default function Navbar() {

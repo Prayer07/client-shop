@@ -1,24 +1,7 @@
 import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { supabase } from '../lib/supabase'
-import type { Product } from '../types'
-import ProductCard from '../components/ProductCard'
-
-const fetchFeaturedProducts = async (): Promise<Product[]> => {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(4)
-  if (error) throw new Error(error.message)
-  return data
-}
+import Newsletter from '../components/Newsletter'
 
 export default function Home() {
-  const { data: featured, isLoading } = useQuery({
-    queryKey: ['featured-products'],
-    queryFn: fetchFeaturedProducts,
-  })
 
   return (
     <div className="flex flex-col">
@@ -37,17 +20,17 @@ export default function Home() {
             Make it warm, personal and inviting.
           </p>
           <div className="flex gap-4 mt-10">
-            <Link
+            {/* <Link
               to="/shop"
               className="bg-brown text-cream text-sm font-medium px-8 py-3 rounded-full hover:bg-brown/80 transition-colors tracking-wide"
             >
               Shop Now
-            </Link>
+            </Link> */}
             <Link
               to="/portfolio"
               className="border border-brown/30 text-brown text-sm font-medium px-8 py-3 rounded-full hover:border-brown hover:bg-brown/5 transition-colors tracking-wide"
             >
-              View Portfolio
+              View My Portfolio
             </Link>
           </div>
         </div>
@@ -64,47 +47,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Featured Products */}
-      <section className="max-w-6xl mx-auto px-6 py-20 w-full">
-        <div className="flex items-end justify-between mb-10">
-          <div>
-            <span className="text-xs font-semibold text-gold uppercase tracking-widest">Collection</span>
-            <h2 className="font-serif text-3xl font-bold text-brown mt-1">Featured Products</h2>
-            <p className="text-taupe text-sm mt-2">Our latest and most loved items</p>
-          </div>
-          <Link
-            to="/shop"
-            className="text-sm font-medium text-brown underline underline-offset-4 decoration-gold hover:text-gold transition-colors"
-          >
-            View All
-          </Link>
-        </div>
-
-        {/* Loading Skeleton */}
-        {isLoading && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="rounded-2xl bg-blush/30 animate-pulse aspect-square" />
-            ))}
-          </div>
-        )}
-
-        {/* Products */}
-        {!isLoading && featured && featured.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-            {featured.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )}
-
-        {/* Empty */}
-        {!isLoading && (!featured || featured.length === 0) && (
-          <div className="text-center py-16 text-taupe text-sm">
-            Products coming soon. Check back shortly!
-          </div>
-        )}
-      </section>
+      <Newsletter/>
 
       {/* About Strip */}
       <section className="bg-blush/20 border-y border-blush/40">
