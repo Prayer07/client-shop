@@ -31,7 +31,7 @@ export default function Login() {
 
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="font-serif text-3xl font-bold text-brown">BrandName</h1>
+          <h1 className="font-serif text-3xl font-bold text-brown">Lammyde Beauty and Spa Lounge</h1>
           <div className="flex items-center justify-center gap-3 mt-3">
             <span className="w-10 h-px bg-gold/40" />
             <span className="text-gold text-xs uppercase tracking-widest font-medium">Admin Portal</span>

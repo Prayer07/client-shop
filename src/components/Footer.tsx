@@ -13,7 +13,7 @@ export default function Footer() {
 
         {/* Brand */}
         <div>
-          <h3 className="font-serif text-cream text-xl font-bold mb-3 tracking-wide">BrandName</h3>
+          <h3 className="font-serif text-cream text-xl font-bold mb-3 tracking-wide">Lammyde Beauty and Spa Lounge</h3>
           <p className="text-sm leading-relaxed text-cream/60">
             A short tagline or description about the brand goes here.
           </p>
@@ -64,7 +64,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-cream/10 text-center text-xs py-5 text-cream/30 tracking-wide">
-        © {new Date().getFullYear()} BrandName. All rights reserved.
+        © {new Date().getFullYear()} . All rights reserved.
       </div>
     </footer>
   )

@@ -41,7 +41,7 @@ export default function Navbar() {
 
         {/* Logo */}
         <Link to="/" className="font-serif text-2xl font-bold text-brown tracking-wide">
-          BrandName
+          Lammyde Beauty and Spa Lounge
         </Link>
 
         {/* Desktop Links */}
