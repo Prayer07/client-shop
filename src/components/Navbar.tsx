@@ -8,7 +8,7 @@ const navLinks = [
   { label: 'My Portfolio', path: '/portfolio' },
   { label: 'Services', path: '/services' },
   { label: 'Contact-Us', path: '/contact' },
-  { label: 'Newsletter', path: '/newsletter' },
+  // { label: 'Newsletter', path: '/newsletter' },
 ]
 
 export default function Navbar() {
