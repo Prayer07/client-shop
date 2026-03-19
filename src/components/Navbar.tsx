@@ -40,7 +40,7 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
 
         {/* Logo */}
-        <Link to="/" className="font-serif text-2xl font-bold text-brown tracking-wide">
+        <Link to="/" className="font-serif text-2 font-bold text-brown tracking-wide">
           Lammyde Beauty and Spa Lounge
         </Link>
 
