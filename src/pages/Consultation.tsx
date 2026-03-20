@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { supabase } from '../lib/supabase'
 
 type Tab = 'preconsult' | 'media' | 'beauty'
 
 const tabs: { id: Tab; label: string; desc: string }[] = [
-  // { id: 'preconsult', label: 'Pre-Consultation', desc: 'Tell us about yourself & your visit' },
-  { id: 'beauty', label: 'Client Beauty History', desc: 'Your skin & beauty profile' },
+  { id: 'preconsult', label: 'Pre-Consultation', desc: 'Tell us about yourself & your visit' },
+  // { id: 'beauty', label: 'Client Beauty History', desc: 'Your skin & beauty profile' },
 ]
 
 const input = 'w-full border border-blush rounded-lg px-4 py-2.5 text-sm bg-cream focus:outline-none focus:ring-2 focus:ring-gold/40 text-brown placeholder:text-taupe/40'
@@ -63,8 +64,9 @@ function PreConsultationForm() {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } =
     useForm<PreForm>({ resolver: zodResolver(preSchema) })
 
-  const onSubmit = async (_data: PreForm) => {
-    await new Promise(r => setTimeout(r, 800))
+  const onSubmit = async (data: PreForm) => {
+    const { error } = await supabase.from('pre_consultations').insert([data])
+    if (error) { console.error(error); return }
     setSubmitted(true)
   }
 

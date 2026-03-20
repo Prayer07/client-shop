@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { useSettings } from '../lib/useSettings'
 
 const navLinks = [
   { label: 'Home', path: '/' },
-  { label: 'Consultation', path: '/consultation' },
-  { label: 'My Portfolio', path: '/portfolio' },
   { label: 'Services', path: '/services' },
-  { label: 'Contact-Us', path: '/contact' },
-  // { label: 'Newsletter', path: '/newsletter' },
+  { label: 'Portfolio', path: '/portfolio' },
+  { label: 'Shop', path: '/shop' },
+  { label: 'Consultation', path: '/consultation' },
+  { label: 'Contact', path: '/contact' },
 ]
 
 export default function Navbar() {
@@ -17,6 +18,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
+  const { data: settings } = useSettings()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session))
@@ -39,12 +41,11 @@ export default function Navbar() {
     <nav className={`sticky top-0 z-50 transition-shadow bg-cream ${scrolled ? 'shadow-md' : 'border-b border-blush/40'}`}>
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
 
-        {/* Logo */}
-        <Link to="/" className="font-serif text-2 font-bold text-brown tracking-wide">
-          Lammyde Beauty and Spa Lounge
+        <Link to="/" className="font-serif text-2xl font-bold text-brown tracking-wide">
+          {settings?.brand_name ?? 'BrandName'}
         </Link>
 
-        {/* Desktop Links */}
+        {/* Desktop */}
         <ul className="hidden md:flex items-center gap-8">
           {navLinks.map(link => (
             <li key={link.path}>
@@ -60,7 +61,6 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
-
           {isAdmin && (
             <>
               <li>
@@ -87,7 +87,7 @@ export default function Navbar() {
           )}
         </ul>
 
-        {/* Mobile Hamburger */}
+        {/* Hamburger */}
         <button
           className="md:hidden flex flex-col gap-1.5 p-1"
           onClick={() => setIsOpen(!isOpen)}
