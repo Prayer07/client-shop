@@ -909,7 +909,7 @@ function AccountTab() {
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault()
     setPassMsg(''); setPassError('')
-    if (!newPassword || !confirmPassword) { setPassError('Fill in all fields.'); return }
+    if (!currentPassword || !newPassword || !confirmPassword) { setPassError('Fill in all fields.'); return }
     if (newPassword.length < 6) { setPassError('Password must be at least 6 characters.'); return }
     if (newPassword !== confirmPassword) { setPassError('Passwords do not match.'); return }
     setPassLoading(true)
