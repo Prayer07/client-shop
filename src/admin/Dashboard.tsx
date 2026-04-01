@@ -913,6 +913,15 @@ function AccountTab() {
     if (newPassword.length < 6) { setPassError('Password must be at least 6 characters.'); return }
     if (newPassword !== confirmPassword) { setPassError('Passwords do not match.'); return }
     setPassLoading(true)
+
+    // Verify current password first
+    const { data: { user } } = await supabase.auth.getUser()
+    const { error: verifyError } = await supabase.auth.signInWithPassword({
+      email: user?.email ?? '',
+      password: currentPassword,
+    })
+    if (verifyError) { setPassError('Current password is incorrect.'); setPassLoading(false); return }
+    
     const { error } = await supabase.auth.updateUser({ password: newPassword })
     if (error) { setPassError(error.message); setPassLoading(false); return }
     setPassLoading(false)
@@ -960,6 +969,17 @@ function AccountTab() {
           Choose a strong password of at least 6 characters.
         </p>
         <form onSubmit={handlePasswordChange} className="flex flex-col gap-4">
+          <div>
+            <label className={label}>Current Password</label>
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={e => setCurrentPassword(e.target.value)}
+              placeholder="••••••••"
+              className={input}
+            />
+          </div>
+
           <div>
             <label className={label}>New Password</label>
             <input
