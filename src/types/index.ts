@@ -51,4 +51,5 @@ export interface SiteSettings {
   social_instagram: string
   social_facebook: string
   social_tiktok: string
+  logo_url: string | null
 }

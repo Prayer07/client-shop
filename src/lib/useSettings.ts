@@ -14,6 +14,7 @@ const defaults: SiteSettings = {
   social_instagram: 'https://instagram.com/placeholder',
   social_facebook: 'https://facebook.com/placeholder',
   social_tiktok: 'https://tiktok.com/@placeholder',
+  logo_url: null,
 }
 
 const fetchSettings = async (): Promise<SiteSettings> => {
@@ -37,6 +38,7 @@ const fetchSettings = async (): Promise<SiteSettings> => {
     social_instagram: map.social_instagram ?? defaults.social_instagram,
     social_facebook: map.social_facebook ?? defaults.social_facebook,
     social_tiktok: map.social_tiktok ?? defaults.social_tiktok,
+    logo_url: map.logo_url ?? defaults.logo_url,
   }
 }
 

@@ -50,7 +50,7 @@ const input = 'w-full border border-blush rounded-lg px-3 py-2.5 text-sm bg-crea
 const label = 'text-sm font-bold text-brown block mb-1'
 
 // ─── TAB TYPE ─────────────────────────────────────────────────────────────────
-type Tab = 'products' | 'portfolio' | 'services' | 'settings' | 'enquiries' | 'subscribers'
+type Tab = 'products' | 'portfolio' | 'services' | 'settings' | 'enquiries' | 'subscribers' | 'account'
 
 const tabs: { id: Tab; label: string }[] = [
   { id: 'products', label: 'Products' },
@@ -59,6 +59,7 @@ const tabs: { id: Tab; label: string }[] = [
   { id: 'settings', label: 'Site Settings' },
   { id: 'enquiries', label: 'Enquiries' },
   { id: 'subscribers', label: 'Subscribers' },
+  { id: 'account', label: 'Account' },
 ]
 
 // ─── PRODUCTS TAB ─────────────────────────────────────────────────────────────
@@ -234,6 +235,16 @@ function PortfolioTab() {
   const [formError, setFormError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
 
+  const [editItem, setEditItem] = useState<PortfolioItem | null>(null)
+  const [editTitle, setEditTitle] = useState('')
+  const [editCategory, setEditCategory] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+  const [editImageFile, setEditImageFile] = useState<File | null>(null)
+  const [editImagePreview, setEditImagePreview] = useState<string | null>(null)
+  const [editUploading, setEditUploading] = useState(false)
+  const [editError, setEditError] = useState('')
+  const [editSuccess, setEditSuccess] = useState('')
+
   const { data: items, isLoading } = useQuery({ queryKey: ['portfolio'], queryFn: fetchPortfolio })
 
   const deleteMutation = useMutation({
@@ -265,47 +276,118 @@ function PortfolioTab() {
     queryClient.invalidateQueries({ queryKey: ['portfolio'] })
   }
 
+  const openEdit = (item: PortfolioItem) => {
+    setEditItem(item)
+    setEditTitle(item.title)
+    setEditCategory(item.category ?? '')
+    setEditDescription(item.description ?? '')
+    setEditImageFile(null)
+    setEditImagePreview(null)
+    setEditError(''); setEditSuccess('')
+  }
+
+  const handleEditSave = async () => {
+    if (!editItem) return
+    setEditError(''); setEditSuccess(''); setEditUploading(true)
+    let image_url = editItem.image_url
+    if (editImageFile) {
+      const fileExt = editImageFile.name.split('.').pop()
+      const fileName = `${Date.now()}.${fileExt}`
+      const { error } = await supabase.storage.from('product-images').upload(fileName, editImageFile)
+      if (error) { setEditError('Image upload failed.'); setEditUploading(false); return }
+      const { data } = supabase.storage.from('product-images').getPublicUrl(fileName)
+      image_url = data.publicUrl
+    }
+    const { error } = await supabase.from('portfolio_items').update({
+      title: editTitle,
+      category: editCategory || null,
+      description: editDescription || null,
+      image_url,
+    }).eq('id', editItem.id)
+    if (error) { setEditError('Update failed.'); setEditUploading(false); return }
+    setEditUploading(false); setEditSuccess('Updated!')
+    queryClient.invalidateQueries({ queryKey: ['portfolio'] })
+    setTimeout(() => setEditItem(null), 800)
+  }
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-      <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
-        <SectionHeader label="New Item" title="Add Portfolio Item" />
-        <form onSubmit={handleAdd} className="flex flex-col gap-4">
-          <div><label className={label}>Title *</label><input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Bridal Glam Look" className={input} /></div>
-          <div><label className={label}>Category</label><input value={category} onChange={e => setCategory(e.target.value)} placeholder="e.g. Makeup, Nails, Skincare" className={input} /></div>
-          <div><label className={label}>Description</label><textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} placeholder="Short description..." className={`${input} resize-none`} /></div>
-          <div>
-            <label className={label}>Image</label>
-            <input type="file" accept="image/*" onChange={e => { const f = e.target.files?.[0]; if (f) { setImageFile(f); setImagePreview(URL.createObjectURL(f)) } }} className="w-full text-sm text-taupe file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-brown file:text-cream hover:file:bg-brown/80 cursor-pointer" />
-            {imagePreview && <img src={imagePreview} className="mt-3 w-24 h-24 object-cover rounded-xl border border-blush/40" />}
-          </div>
-          {formError && <p className="text-xs text-red-400">{formError}</p>}
-          {successMsg && <p className="text-xs text-green-600">{successMsg}</p>}
-          <button type="submit" disabled={uploading} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{uploading ? 'Uploading...' : 'Add Item'}</button>
-        </form>
+    <>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
+          <SectionHeader label="New Item" title="Add Portfolio Item" />
+          <form onSubmit={handleAdd} className="flex flex-col gap-4">
+            <div><label className={label}>Title *</label><input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Bridal Glam Look" className={input} /></div>
+            <div><label className={label}>Category</label><input value={category} onChange={e => setCategory(e.target.value)} placeholder="e.g. Makeup, Nails, Skincare" className={input} /></div>
+            <div><label className={label}>Description</label><textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} placeholder="Short description..." className={`${input} resize-none`} /></div>
+            <div>
+              <label className={label}>Image</label>
+              <input type="file" accept="image/*" onChange={e => { const f = e.target.files?.[0]; if (f) { setImageFile(f); setImagePreview(URL.createObjectURL(f)) } }} className="w-full text-sm text-taupe file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-brown file:text-cream hover:file:bg-brown/80 cursor-pointer" />
+              {imagePreview && <img src={imagePreview} className="mt-3 w-24 h-24 object-cover rounded-xl border border-blush/40" />}
+            </div>
+            {formError && <p className="text-xs text-red-400">{formError}</p>}
+            {successMsg && <p className="text-xs text-green-600">{successMsg}</p>}
+            <button type="submit" disabled={uploading} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{uploading ? 'Uploading...' : 'Add Item'}</button>
+          </form>
+        </div>
+
+        <div>
+          <SectionHeader label="Gallery" title="All Portfolio Items" />
+          {isLoading && <div className="flex flex-col gap-3">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-20 rounded-xl bg-blush/30 animate-pulse" />)}</div>}
+          {!isLoading && (!items || items.length === 0) && <p className="text-sm font-medium text-brown/50">No portfolio items yet.</p>}
+          {!isLoading && items && items.length > 0 && (
+            <div className="flex flex-col gap-3">
+              {items.map(item => (
+                <div key={item.id} className="bg-white border border-blush/40 rounded-xl p-3 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden bg-blush/20 shrink-0 border border-blush/30">
+                      {item.image_url ? <img src={item.image_url} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-brown/30 text-xs font-semibold">N/A</div>}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-black text-brown truncate font-serif">{item.title}</p>
+                      {item.category && <p className="text-xs font-semibold text-gold">{item.category}</p>}
+                    </div>
+                    <button onClick={() => confirm(`Delete "${item.title}"?`) && deleteMutation.mutate(item.id)} className="text-xs text-red-300 hover:text-red-500 font-bold transition-colors shrink-0">Delete</button>
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-blush/20">
+                    <button
+                      onClick={() => openEdit(item)}
+                      className="text-xs bg-cream border border-blush/40 hover:border-gold/40 hover:text-gold text-taupe px-3 py-1 rounded-full transition-colors font-semibold"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      <div>
-        <SectionHeader label="Gallery" title="All Portfolio Items" />
-        {isLoading && <div className="flex flex-col gap-3">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-20 rounded-xl bg-blush/30 animate-pulse" />)}</div>}
-        {!isLoading && (!items || items.length === 0) && <p className="text-sm font-medium text-brown/50">No portfolio items yet.</p>}
-        {!isLoading && items && items.length > 0 && (
-          <div className="flex flex-col gap-3">
-            {items.map(item => (
-              <div key={item.id} className="bg-white border border-blush/40 rounded-xl p-3 shadow-sm flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl overflow-hidden bg-blush/20 shrink-0 border border-blush/30">
-                  {item.image_url ? <img src={item.image_url} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-brown/30 text-xs font-semibold">N/A</div>}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-black text-brown truncate font-serif">{item.title}</p>
-                  {item.category && <p className="text-xs font-semibold text-gold">{item.category}</p>}
-                </div>
-                <button onClick={() => confirm(`Delete "${item.title}"?`) && deleteMutation.mutate(item.id)} className="text-xs text-red-300 hover:text-red-500 font-bold transition-colors shrink-0">Delete</button>
+      {/* Edit Modal */}
+      {editItem && (
+        <div className="fixed inset-0 z-50 bg-brown/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setEditItem(null)}>
+          <div className="bg-cream rounded-2xl shadow-2xl w-full max-w-md p-7 border border-blush/40" onClick={e => e.stopPropagation()}>
+            <div className="flex items-start justify-between mb-5">
+              <div><h2 className="font-serif text-xl font-black text-brown">Edit Portfolio Item</h2><p className="text-xs font-medium text-brown/50 mt-0.5">{editItem.title}</p></div>
+              <button onClick={() => setEditItem(null)} className="text-taupe hover:text-brown text-xl">✕</button>
+            </div>
+            <div className="flex flex-col gap-4">
+              <div><label className={label}>Title *</label><input value={editTitle} onChange={e => setEditTitle(e.target.value)} className={input} /></div>
+              <div><label className={label}>Category</label><input value={editCategory} onChange={e => setEditCategory(e.target.value)} placeholder="e.g. Makeup, Nails" className={input} /></div>
+              <div><label className={label}>Description</label><textarea value={editDescription} onChange={e => setEditDescription(e.target.value)} rows={2} className={`${input} resize-none`} /></div>
+              <div>
+                <label className={label}>New Image <span className="font-normal text-brown/40">(leave empty to keep current)</span></label>
+                <input type="file" accept="image/*" onChange={e => { const f = e.target.files?.[0]; if (f) { setEditImageFile(f); setEditImagePreview(URL.createObjectURL(f)) } }} className="w-full text-sm text-taupe file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-brown file:text-cream hover:file:bg-brown/80 cursor-pointer" />
+                {(editImagePreview || editItem.image_url) && <img src={editImagePreview ?? editItem.image_url!} className="mt-3 w-24 h-24 object-cover rounded-xl border border-blush/40" />}
               </div>
-            ))}
+              {editError && <p className="text-xs text-red-400">{editError}</p>}
+              {editSuccess && <p className="text-xs text-green-600">{editSuccess}</p>}
+              <button onClick={handleEditSave} disabled={editUploading} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{editUploading ? 'Saving...' : 'Save Changes'}</button>
+            </div>
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   )
 }
 
@@ -320,6 +402,16 @@ function ServicesTab() {
   const [saving, setSaving] = useState(false)
   const [formError, setFormError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
+
+  const [editService, setEditService] = useState<Service | null>(null)
+  // const [editEmoji, setEditEmoji] = useState('')
+  const [editTitle, setEditTitle] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+  const [editDuration, setEditDuration] = useState('')
+  const [editPrice, setEditPrice] = useState('')
+  const [editSaving, setEditSaving] = useState(false)
+  const [editError, setEditError] = useState('')
+  const [editSuccess, setEditSuccess] = useState('')
 
   const { data: services, isLoading } = useQuery({ queryKey: ['services'], queryFn: fetchServices })
 
@@ -344,45 +436,153 @@ function ServicesTab() {
     queryClient.invalidateQueries({ queryKey: ['services'] })
   }
 
+  const openEdit = (s: Service) => {
+    setEditService(s)
+    // setEditEmoji(s.emoji ?? '')
+    setEditTitle(s.title)
+    setEditDescription(s.description ?? '')
+    setEditDuration(s.duration ?? '')
+    setEditPrice(s.price ?? '')
+    setEditError(''); setEditSuccess('')
+  }
+
+  const handleEditSave = async () => {
+    if (!editService) return
+    setEditError(''); setEditSuccess(''); setEditSaving(true)
+    const { error } = await supabase.from('services').update({
+      // emoji: editEmoji || null,
+      title: editTitle,
+      description: editDescription || null,
+      duration: editDuration || null,
+      price: editPrice || null,
+    }).eq('id', editService.id)
+    if (error) { setEditError('Update failed.'); setEditSaving(false); return }
+    setEditSaving(false); setEditSuccess('Updated!')
+    queryClient.invalidateQueries({ queryKey: ['services'] })
+    setTimeout(() => setEditService(null), 800)
+  }
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-      <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
-        <SectionHeader label="New Service" title="Add a Service" />
-        <form onSubmit={handleAdd} className="flex flex-col gap-4">
-          <div className="grid grid-cols-4 gap-3">
-            {/* <div className="col-span-1"><label className={label}>Emoji</label><input value={emoji} onChange={e => setEmoji(e.target.value)} placeholder="💆‍♀️" className={input} /></div> */}
-            <div className="col-span-3"><label className={label}>Service Title *</label><input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Massage Therapy" className={input} /></div>
-          </div>
-          <div><label className={label}>Description</label><textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} placeholder="What does this service include?" className={`${input} resize-none`} /></div>
-          <div className="grid grid-cols-2 gap-3">
-            <div><label className={label}>Duration</label><input value={duration} onChange={e => setDuration(e.target.value)} placeholder="e.g. 60 mins" className={input} /></div>
-            <div><label className={label}>Price</label><input value={price} onChange={e => setPrice(e.target.value)} placeholder="e.g. From $85" className={input} /></div>
-          </div>
-          {formError && <p className="text-xs text-red-400">{formError}</p>}
-          {successMsg && <p className="text-xs text-green-600">{successMsg}</p>}
-          <button type="submit" disabled={saving} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{saving ? 'Saving...' : 'Add Service'}</button>
-        </form>
+    <>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
+          <SectionHeader label="New Service" title="Add a Service" />
+          <form onSubmit={handleAdd} className="flex flex-col gap-4">
+            <div className="grid grid-cols-4 gap-3">
+              <div className="col-span-3"><label className={label}>Service Title *</label><input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Massage Therapy" className={input} /></div>
+            </div>
+            <div><label className={label}>Description</label><textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} placeholder="What does this service include?" className={`${input} resize-none`} /></div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><label className={label}>Duration</label><input value={duration} onChange={e => setDuration(e.target.value)} placeholder="e.g. 60 mins" className={input} /></div>
+              <div><label className={label}>Price</label><input value={price} onChange={e => setPrice(e.target.value)} placeholder="e.g. From $85" className={input} /></div>
+            </div>
+            {formError && <p className="text-xs text-red-400">{formError}</p>}
+            {successMsg && <p className="text-xs text-green-600">{successMsg}</p>}
+            <button type="submit" disabled={saving} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{saving ? 'Saving...' : 'Add Service'}</button>
+          </form>
+        </div>
+
+        <div>
+          <SectionHeader label="Menu" title="All Services" />
+          {isLoading && <div className="flex flex-col gap-3">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-20 rounded-xl bg-blush/30 animate-pulse" />)}</div>}
+          {!isLoading && (!services || services.length === 0) && <p className="text-sm font-medium text-brown/50">No services yet.</p>}
+          {!isLoading && services && services.length > 0 && (
+            <div className="flex flex-col gap-3">
+              {services.map(s => (
+                <div key={s.id} className="bg-white border border-blush/40 rounded-xl p-3 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    {/* <div className="w-10 h-10 rounded-full bg-blush/30 flex items-center justify-center text-xl shrink-0">{s.emoji ?? '✨'}</div> */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-black text-brown truncate font-serif">{s.title}</p>
+                      <p className="text-xs font-semibold text-brown/50">{s.duration}{s.price && ` · ${s.price}`}</p>
+                    </div>
+                    <button onClick={() => confirm(`Delete "${s.title}"?`) && deleteMutation.mutate(s.id)} className="text-xs text-red-300 hover:text-red-500 font-bold transition-colors shrink-0">Delete</button>
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-blush/20">
+                    <button
+                      onClick={() => openEdit(s)}
+                      className="text-xs bg-cream border border-blush/40 hover:border-gold/40 hover:text-gold text-taupe px-3 py-1 rounded-full transition-colors font-semibold"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      <div>
-        <SectionHeader label="Menu" title="All Services" />
-        {isLoading && <div className="flex flex-col gap-3">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-20 rounded-xl bg-blush/30 animate-pulse" />)}</div>}
-        {!isLoading && (!services || services.length === 0) && <p className="text-sm font-medium text-brown/50">No services yet.</p>}
-        {!isLoading && services && services.length > 0 && (
-          <div className="flex flex-col gap-3">
-            {services.map(s => (
-              <div key={s.id} className="bg-white border border-blush/40 rounded-xl p-3 shadow-sm flex items-center gap-3">
-                {/* <div className="w-10 h-10 rounded-full bg-blush/30 flex items-center justify-center text-xl shrink-0">{s.emoji ?? '✨'}</div> */}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-black text-brown truncate font-serif">{s.title}</p>
-                  <p className="text-xs font-semibold text-brown/50">{s.duration} {s.price && `· ${s.price}`}</p>
-                </div>
-                <button onClick={() => confirm(`Delete "${s.title}"?`) && deleteMutation.mutate(s.id)} className="text-xs text-red-300 hover:text-red-500 font-bold transition-colors shrink-0">Delete</button>
+      {/* Edit Modal */}
+      {editService && (
+        <div className="fixed inset-0 z-50 bg-brown/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setEditService(null)}>
+          <div className="bg-cream rounded-2xl shadow-2xl w-full max-w-md p-7 border border-blush/40" onClick={e => e.stopPropagation()}>
+            <div className="flex items-start justify-between mb-5">
+              <div><h2 className="font-serif text-xl font-black text-brown">Edit Service</h2><p className="text-xs font-medium text-brown/50 mt-0.5">{editService.title}</p></div>
+              <button onClick={() => setEditService(null)} className="text-taupe hover:text-brown text-xl">✕</button>
+            </div>
+            <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-4 gap-3">
+                {/* <div className="col-span-1"><label className={label}>Emoji</label><input value={editEmoji} onChange={e => setEditEmoji(e.target.value)} placeholder="💆‍♀️" className={input} /></div> */}
+                <div className="col-span-3"><label className={label}>Title *</label><input value={editTitle} onChange={e => setEditTitle(e.target.value)} className={input} /></div>
               </div>
-            ))}
+              <div><label className={label}>Description</label><textarea value={editDescription} onChange={e => setEditDescription(e.target.value)} rows={2} className={`${input} resize-none`} /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className={label}>Duration</label><input value={editDuration} onChange={e => setEditDuration(e.target.value)} placeholder="e.g. 60 mins" className={input} /></div>
+                <div><label className={label}>Price</label><input value={editPrice} onChange={e => setEditPrice(e.target.value)} placeholder="e.g. From $85" className={input} /></div>
+              </div>
+              {editError && <p className="text-xs text-red-400">{editError}</p>}
+              {editSuccess && <p className="text-xs text-green-600">{editSuccess}</p>}
+              <button onClick={handleEditSave} disabled={editSaving} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{editSaving ? 'Saving...' : 'Save Changes'}</button>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+function LogoUpload({ onUploaded, currentUrl }: { onUploaded: (url: string) => void; currentUrl?: string }) {
+  const [uploading, setUploading] = useState(false)
+  const [preview, setPreview] = useState<string | null>(null)
+  const [success, setSuccess] = useState('')
+  const [error, setError] = useState('')
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true); setError(''); setSuccess('')
+    setPreview(URL.createObjectURL(file))
+    const fileExt = file.name.split('.').pop()
+    const fileName = `logo-${Date.now()}.${fileExt}`
+    const { error: storageError } = await supabase.storage.from('product-images').upload(fileName, file)
+    if (storageError) { setError('Upload failed.'); setUploading(false); return }
+    const { data } = supabase.storage.from('product-images').getPublicUrl(fileName)
+    onUploaded(data.publicUrl)
+    setUploading(false)
+    setSuccess('Logo uploaded! Hit Save All Settings to apply.')
+  }
+
+  const displayImg = preview || currentUrl
+
+  return (
+    <div>
+      {displayImg && (
+        <div className="mb-4 p-4 bg-brown rounded-xl inline-block">
+          <img src={displayImg} alt="Logo preview" className="h-12 w-auto object-contain" />
+        </div>
+      )}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleUpload}
+        disabled={uploading}
+        className="w-full text-sm text-taupe file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-brown file:text-cream hover:file:bg-brown/80 cursor-pointer disabled:opacity-50"
+      />
+      <p className="text-xs text-brown/40 mt-2">Preview shown on dark background to simulate the navbar.</p>
+      {uploading && <p className="text-xs text-brown/50 mt-2">Uploading...</p>}
+      {success && <p className="text-xs text-green-600 mt-2">{success}</p>}
+      {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
     </div>
   )
 }
@@ -461,6 +661,7 @@ function SettingsTab() {
 
   const fields: { key: string; label: string; type?: string; placeholder?: string }[][] = [
     [
+      { key: 'logo_url', label: 'Logo URL', placeholder: 'Will be auto-filled when you upload below' },
       { key: 'brand_name', label: 'Brand Name', placeholder: 'e.g. Lammy De Beauty Spa' },
       { key: 'hero_headline', label: 'Hero Headline', placeholder: 'Main headline on the homepage' },
       { key: 'hero_tagline', label: 'Hero Tagline', placeholder: 'Short description under the headline' },
@@ -538,13 +739,37 @@ function SettingsTab() {
         </p>
         <AboutImageUpload onUploaded={(url) => setValues(prev => ({ ...prev, about_image: url }))} />
       </div>
+      
+      {/* Logo Upload */}
+      <div className="mt-6 bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
+        <h3 className="font-serif font-black text-brown text-base mb-2">Upload Logo</h3>
+        <p className="text-xs font-medium text-brown/50 mb-4">
+          Upload your brand logo. It will appear in the navbar and replace the text brand name.
+          Recommended: PNG with transparent background.
+        </p>
+        <LogoUpload onUploaded={(url) => setValues(prev => ({ ...prev, logo_url: url }))} currentUrl={values['logo_url']} />
+      </div>
+
     </div>
   )
 }
 
 // ─── ENQUIRIES TAB ────────────────────────────────────────────────────────────
 function EnquiriesTab() {
+  const queryClient = useQueryClient()
   const { data: enquiries, isLoading } = useQuery({ queryKey: ['enquiries'], queryFn: fetchEnquiries })
+
+  const deleteEnquiry = async (id: string) => {
+    if (!confirm('Delete this enquiry?')) return
+    await supabase.from('enquiries').delete().eq('id', id)
+    queryClient.invalidateQueries({ queryKey: ['enquiries'] })
+  }
+
+  const deleteConsultation = async (id: string) => {
+    if (!confirm('Delete this consultation?')) return
+    await supabase.from('pre_consultations').delete().eq('id', id)
+    queryClient.invalidateQueries({ queryKey: ['consultations'] })
+  }
 
   return (
     <div>
@@ -562,7 +787,15 @@ function EnquiriesTab() {
                 <div key={e.id} className="bg-white border border-blush/40 rounded-xl p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <p className="text-sm font-black text-brown font-serif">{e.name}</p>
-                    <p className="text-xs font-medium text-brown/40 shrink-0">{new Date(e.created_at).toLocaleDateString()}</p>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <p className="text-xs font-medium text-brown/40">{new Date(e.created_at).toLocaleDateString()}</p>
+                      <button
+                        onClick={() => deleteEnquiry(e.id)}
+                        className="text-xs text-red-300 hover:text-red-500 font-bold transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                   <p className="text-xs font-semibold text-gold mb-1">{e.subject}</p>
                   <p className="text-xs font-medium text-brown/60 leading-relaxed">{e.message}</p>
@@ -573,14 +806,14 @@ function EnquiriesTab() {
           )}
         </div>
 
-        {/* Pre-consultations */}
-        <ConsultationsPanel />
+        {/* Consultations */}
+        <ConsultationsPanel onDelete={deleteConsultation} />
       </div>
     </div>
   )
 }
 
-function ConsultationsPanel() {
+function ConsultationsPanel({ onDelete }: { onDelete: (id: string) => void }) {
   const { data, isLoading } = useQuery({ queryKey: ['consultations'], queryFn: fetchConsultations })
 
   return (
@@ -594,7 +827,15 @@ function ConsultationsPanel() {
             <div key={c.id} className="bg-white border border-blush/40 rounded-xl p-4 shadow-sm">
               <div className="flex items-start justify-between gap-2 mb-2">
                 <p className="text-sm font-black text-brown font-serif">{c.full_name}</p>
-                <p className="text-xs font-medium text-brown/40 shrink-0">{new Date(c.created_at).toLocaleDateString()}</p>
+                <div className="flex items-center gap-2 shrink-0">
+                  <p className="text-xs font-medium text-brown/40">{new Date(c.created_at).toLocaleDateString()}</p>
+                  <button
+                    onClick={() => onDelete(c.id)}
+                    className="text-xs text-red-300 hover:text-red-500 font-bold transition-colors"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
               <p className="text-xs font-semibold text-gold mb-1">{c.service_interest}</p>
               <p className="text-xs font-medium text-brown/60">{c.email} · {c.phone}</p>
@@ -636,6 +877,120 @@ function SubscribersTab() {
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+function AccountTab() {
+  const [email, setEmail] = useState('')
+  const [emailMsg, setEmailMsg] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [emailLoading, setEmailLoading] = useState(false)
+
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [passMsg, setPassMsg] = useState('')
+  const [passError, setPassError] = useState('')
+  const [passLoading, setPassLoading] = useState(false)
+
+  const handleEmailChange = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setEmailMsg(''); setEmailError('')
+    if (!email) { setEmailError('Enter a new email address.'); return }
+    setEmailLoading(true)
+    const { error } = await supabase.auth.updateUser({ email })
+    if (error) { setEmailError(error.message); setEmailLoading(false); return }
+    setEmailLoading(false)
+    setEmail('')
+    setEmailMsg('Confirmation sent to your new email. Check your inbox to confirm the change.')
+  }
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setPassMsg(''); setPassError('')
+    if (!newPassword || !confirmPassword) { setPassError('Fill in all fields.'); return }
+    if (newPassword.length < 6) { setPassError('Password must be at least 6 characters.'); return }
+    if (newPassword !== confirmPassword) { setPassError('Passwords do not match.'); return }
+    setPassLoading(true)
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+    if (error) { setPassError(error.message); setPassLoading(false); return }
+    setPassLoading(false)
+    setCurrentPassword(''); setNewPassword(''); setConfirmPassword('')
+    setPassMsg('Password updated successfully!')
+  }
+
+  return (
+    <div className="max-w-md">
+      <SectionHeader label="Security" title="Account Settings" />
+
+      {/* Change Email */}
+      <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6 mb-6">
+        <h3 className="font-serif font-black text-brown text-base mb-1">Change Email</h3>
+        <p className="text-xs font-medium text-brown/50 mb-5">
+          A confirmation link will be sent to your new email address.
+        </p>
+        <form onSubmit={handleEmailChange} className="flex flex-col gap-4">
+          <div>
+            <label className={label}>New Email Address</label>
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="newemail@example.com"
+              className={input}
+            />
+          </div>
+          {emailError && <p className="text-xs text-red-400">{emailError}</p>}
+          {emailMsg && <p className="text-xs text-green-600">{emailMsg}</p>}
+          <button
+            type="submit"
+            disabled={emailLoading}
+            className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50"
+          >
+            {emailLoading ? 'Sending...' : 'Update Email'}
+          </button>
+        </form>
+      </div>
+
+      {/* Change Password */}
+      <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
+        <h3 className="font-serif font-black text-brown text-base mb-1">Change Password</h3>
+        <p className="text-xs font-medium text-brown/50 mb-5">
+          Choose a strong password of at least 6 characters.
+        </p>
+        <form onSubmit={handlePasswordChange} className="flex flex-col gap-4">
+          <div>
+            <label className={label}>New Password</label>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={e => setNewPassword(e.target.value)}
+              placeholder="••••••••"
+              className={input}
+            />
+          </div>
+          <div>
+            <label className={label}>Confirm New Password</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)}
+              placeholder="••••••••"
+              className={input}
+            />
+          </div>
+          {passError && <p className="text-xs text-red-400">{passError}</p>}
+          {passMsg && <p className="text-xs text-green-600">{passMsg}</p>}
+          <button
+            type="submit"
+            disabled={passLoading}
+            className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50"
+          >
+            {passLoading ? 'Updating...' : 'Update Password'}
+          </button>
+        </form>
+      </div>
     </div>
   )
 }
@@ -697,6 +1052,7 @@ export default function Dashboard() {
         {activeTab === 'settings' && <SettingsTab />}
         {activeTab === 'enquiries' && <EnquiriesTab />}
         {activeTab === 'subscribers' && <SubscribersTab />}
+        {activeTab === 'account' && <AccountTab />}
 
       </div>
     </div>
