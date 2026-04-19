@@ -2,11 +2,14 @@ import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
 import type { Service } from '../types'
+import { FaSpa } from 'react-icons/fa'
+import { FiClock } from 'react-icons/fi'
+import { RiScalesLine } from 'react-icons/ri'
 
 const CALENDLY_URL = 'https://calendly.com/lammydebeautyspa/makeover'
 
 declare global {
-  interface Window { Calendly: any }
+  interface Window { Calendly?: { initPopupWidget: (opts: { url: string }) => void } }
 }
 
 const fetchServices = async (): Promise<Service[]> => {
@@ -53,8 +56,9 @@ export default function Services() {
     <section className="min-h-screen bg-cream">
 
       {/* Header */}
-      <div className="bg-blush/30 border-b border-blush/40">
-        <div className="max-w-6xl mx-auto px-6 py-16 text-center">
+      <div className="relative overflow-hidden bg-blush/30 border-b border-blush/40">
+        <div className="absolute inset-0 -z-10 animated-gradient opacity-60 pointer-events-none" />
+        <div className="max-w-6xl mx-auto px-6 py-16 text-center fade-up">
           <span className="text-xs font-bold text-gold uppercase tracking-widest">What We Offer</span>
           <h1 className="font-serif text-4xl font-black text-brown mt-2">Our Services</h1>
           <p className="text-brown/60 font-medium text-sm mt-3 max-w-md mx-auto leading-relaxed">
@@ -76,7 +80,7 @@ export default function Services() {
         {isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="rounded-2xl bg-blush/30 animate-pulse h-64" />
+              <div key={i} className="rounded-2xl bg-blush/30 skeleton h-64" />
             ))}
           </div>
         )}
@@ -92,7 +96,7 @@ export default function Services() {
         {!isLoading && !isError && (!services || services.length === 0) && (
           <div className="text-center py-24">
             <div className="w-16 h-16 rounded-full bg-blush/40 flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">🌸</span>
+              <FaSpa className="text-2xl text-brown" />
             </div>
             <p className="text-brown/50 font-semibold text-sm">
               Services coming soon. Check back shortly!
@@ -106,11 +110,11 @@ export default function Services() {
             {services.map(service => (
               <div
                 key={service.id}
-                className="group bg-white border border-blush/40 rounded-2xl p-6 hover:shadow-lg hover:border-gold/30 transition-all duration-300 flex flex-col"
+                className="group bg-white border border-blush/40 rounded-2xl p-6 hover:shadow-lg hover:border-gold/30 transition-all duration-300 flex flex-col fade-up"
               >
-                {/* <div className="w-12 h-12 rounded-full bg-blush/30 flex items-center justify-center text-2xl mb-4 group-hover:bg-gold/10 transition-colors">
-                  {service.emoji ?? '✨'}
-                </div> */}
+                <div className="w-12 h-12 rounded-full bg-blush/30 flex items-center justify-center text-2xl mb-4 group-hover:bg-gold/10 transition-colors">
+                  <RiScalesLine />
+                </div>
                 <h3 className="font-serif font-black text-brown text-base mb-2">
                   {service.title}
                 </h3>
@@ -121,7 +125,7 @@ export default function Services() {
                 )}
                 <div className="flex items-center justify-between border-t border-blush/30 pt-4 mb-4">
                   {service.duration && (
-                    <span className="text-xs font-semibold text-brown/50">⏱ {service.duration}</span>
+                    <span className="text-xs font-semibold text-brown/50"><FiClock className="inline mr-1" />{service.duration}</span>
                   )}
                   {service.price && (
                     <span className="text-xs font-black text-brown">${service.price}</span>

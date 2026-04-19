@@ -1,4 +1,4 @@
-import { FaWhatsapp, FaEnvelope, FaMapMarker } from "react-icons/fa";
+import { FaWhatsapp, FaEnvelope, FaMapMarker, FaRegCheckCircle } from "react-icons/fa";
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -42,8 +42,9 @@ export default function Contact() {
   return (
     <section className="min-h-screen bg-cream">
 
-      <div className="bg-blush/30 border-b border-blush/40">
-        <div className="max-w-6xl mx-auto px-6 py-16 text-center">
+      <div className="relative overflow-hidden bg-blush/30 border-b border-blush/40">
+        <div className="absolute inset-0 -z-10 animated-gradient opacity-50 pointer-events-none" />
+        <div className="max-w-6xl mx-auto px-6 py-16 text-center fade-up">
           <span className="text-xs font-bold text-gold uppercase tracking-widest">Reach Out</span>
           <h1 className="font-serif text-4xl font-black text-brown mt-2">Get in Touch</h1>
           <p className="text-brown/60 font-medium text-sm mt-3 max-w-md mx-auto leading-relaxed">
@@ -53,10 +54,10 @@ export default function Contact() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-start">
 
           {/* Left */}
-          <div>
+          <div className="fade-up">
             <div className="flex items-center gap-3 mb-8">
               <span className="w-10 h-px bg-gold/40" />
               <span className="text-gold text-xs font-bold uppercase tracking-widest">Contact Info</span>
@@ -113,7 +114,8 @@ export default function Contact() {
           </div>
 
           {/* Right */}
-          <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-7">
+          <div className="relative bg-white border border-blush/40 rounded-2xl shadow-sm p-7 fade-up">
+            {isSubmitting && <div className="absolute inset-0 z-20 rounded-2xl skeleton" aria-hidden="true" />}
             {!submitted ? (
               <>
                 <h2 className="font-serif text-2xl font-black text-brown mb-1">Send an Enquiry</h2>
@@ -153,7 +155,7 @@ export default function Contact() {
             ) : (
               <div className="text-center py-10">
                 <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
-                  <span className="text-3xl">✅</span>
+                  <FaRegCheckCircle className="text-3xl text-brown" />
                 </div>
                 <h2 className="font-serif text-2xl font-black text-brown mb-2">Message Received!</h2>
                 <p className="text-sm font-medium text-brown/60 leading-relaxed">

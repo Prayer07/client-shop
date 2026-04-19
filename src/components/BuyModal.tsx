@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Product } from '../types'
+import { FiX } from 'react-icons/fi'
 
 const schema = z.object({
   name: z.string().min(2, 'Please enter your name'),
@@ -68,7 +69,7 @@ export default function BuyModal({ product, onClose }: Props) {
                 onClick={onClose}
                 className="text-taupe hover:text-brown transition-colors text-xl leading-none mt-0.5"
               >
-                ✕
+                <FiX />
               </button>
             </div>
 
@@ -109,7 +110,7 @@ export default function BuyModal({ product, onClose }: Props) {
           /* Success */
           <div className="text-center py-8">
             <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
-              <span className="text-3xl">🎉</span>
+              <span className="text-3xl"> </span>
             </div>
             <h2 className="font-serif text-xl font-bold text-brown mb-2">Request Sent!</h2>
             <p className="text-sm text-taupe leading-relaxed">

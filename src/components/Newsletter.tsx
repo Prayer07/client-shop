@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { FaEnvelope } from 'react-icons/fa'
 
 export default function Newsletter() {
   const [email, setEmail] = useState('')
@@ -36,7 +37,7 @@ export default function Newsletter() {
       <div className="max-w-2xl mx-auto px-6 py-16 text-center">
 
         <div className="w-14 h-14 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-5">
-          <span className="text-2xl">💌</span>
+          <FaEnvelope className="text-2xl text-brown" />
         </div>
 
         <span className="text-xs font-bold text-gold uppercase tracking-widest">
@@ -52,14 +53,15 @@ export default function Newsletter() {
 
         {status === 'success' ? (
           <div className="bg-white border border-blush/40 rounded-2xl px-6 py-8">
-            <div className="text-3xl mb-3">🎉</div>
             <p className="font-serif text-lg font-black text-brown mb-1">You're subscribed!</p>
             <p className="text-brown/60 font-medium text-sm">
               Welcome to the community. Expect beautiful things in your inbox soon.
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <form onSubmit={handleSubmit} className="relative flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            {/* loading overlay to mask fetch latency */}
+            <div className={`${status === 'loading' ? 'absolute inset-0 z-20 rounded-2xl skeleton pointer-events-none' : 'hidden'}`} />
             <input
               type="email"
               value={email}

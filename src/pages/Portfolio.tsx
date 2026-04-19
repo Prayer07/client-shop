@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
 import type { PortfolioItem } from '../types'
+import { FiImage } from 'react-icons/fi'
 
 const fetchPortfolio = async (): Promise<PortfolioItem[]> => {
   const { data, error } = await supabase
@@ -20,8 +21,9 @@ export default function Portfolio() {
   return (
     <section className="min-h-screen bg-cream">
 
-      <div className="bg-blush/30 border-b border-blush/40">
-        <div className="max-w-6xl mx-auto px-6 py-16 text-center">
+      <div className="relative overflow-hidden bg-blush/30 border-b border-blush/40">
+        <div className="absolute inset-0 -z-10 animated-gradient opacity-60 pointer-events-none" />
+        <div className="max-w-6xl mx-auto px-6 py-16 text-center fade-up">
           <span className="text-xs font-bold text-gold uppercase tracking-widest">Our Work</span>
           <h1 className="font-serif text-4xl font-black text-brown mt-2">Portfolio</h1>
           <p className="text-brown/60 font-medium text-sm mt-3 max-w-md mx-auto leading-relaxed">
@@ -42,7 +44,7 @@ export default function Portfolio() {
         {isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="rounded-2xl bg-blush/30 animate-pulse aspect-square" />
+              <div key={i} className="rounded-2xl bg-blush/30 skeleton aspect-square" />
             ))}
           </div>
         )}
@@ -58,7 +60,7 @@ export default function Portfolio() {
         {!isLoading && !isError && (!items || items.length === 0) && (
           <div className="text-center py-24">
             <div className="w-16 h-16 rounded-full bg-blush/40 flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">🖼️</span>
+              <FiImage className="text-2xl text-brown" />
             </div>
             <p className="text-brown/50 font-semibold text-sm">
               Portfolio coming soon. Check back shortly!
@@ -72,18 +74,19 @@ export default function Portfolio() {
             {items.map(item => (
               <div
                 key={item.id}
-                className="group bg-cream rounded-2xl border border-blush/40 overflow-hidden hover:shadow-lg transition-all duration-300"
+                className="group bg-cream rounded-2xl border border-blush/40 overflow-hidden hover:shadow-lg transition-all duration-300 fade-up"
               >
-                <div className="aspect-square overflow-hidden bg-blush/20">
+                <div className="aspect-square overflow-hidden bg-blush/20 relative">
+                  <div className="absolute inset-0 z-0 skeleton" aria-hidden="true" />
                   {item.image_url ? (
                     <img
                       src={item.image_url}
                       alt={item.title}
                       loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 image-figure relative z-10"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-brown/30 font-semibold text-sm">
+                    <div className="w-full h-full flex items-center justify-center text-brown/30 font-semibold text-sm relative z-10">
                       No Image
                     </div>
                   )}
