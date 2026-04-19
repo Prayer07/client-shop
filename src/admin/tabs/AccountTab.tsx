@@ -13,11 +13,37 @@ export default function AccountTab() {
   const { data: account, isLoading } = useQuery({ queryKey: ['account'], queryFn: fetchAccount })
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  // Keep message state for future use; setter intentionally unused for now
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [msg, setMsg] = useState('')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [err, setErr] = useState('')
+
+  const handleSave = async () => {
+    setErr('')
+    setMsg('')
+    try {
+      const payload: Record<string, unknown> = {}
+      if (email.trim()) payload.email = email.trim()
+      if (password) payload.password = password
+
+      if (Object.keys(payload).length === 0) {
+        setMsg('No changes to save')
+        return
+      }
+
+      if (account && account.id) {
+        const { error } = await supabase.from('accounts').update(payload).eq('id', account.id)
+        if (error) throw error
+      } else {
+        const { error } = await supabase.from('accounts').insert(payload)
+        if (error) throw error
+      }
+
+      setMsg('Saved successfully')
+      // clear local inputs
+      setPassword('')
+    } catch (e: any) {
+      setErr(e?.message ?? 'Save failed')
+    }
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -28,7 +54,13 @@ export default function AccountTab() {
           <div><label className={label}>New Password</label><input value={password} onChange={e => setPassword(e.target.value)} type="password" className={input} /></div>
           {err && <p className="text-xs text-red-400">{err}</p>}
           {msg && <p className="text-xs text-green-600">{msg}</p>}
-          <button disabled={isLoading} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm">Save</button>
+          <button
+            onClick={() => void handleSave()}
+            disabled={isLoading}
+            className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm"
+          >
+            Save
+          </button>
         </div>
       </div>
 
