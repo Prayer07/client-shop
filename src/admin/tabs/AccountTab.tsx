@@ -40,8 +40,9 @@ export default function AccountTab() {
       setMsg('Saved successfully')
       // clear local inputs
       setPassword('')
-    } catch (e: any) {
-      setErr(e?.message ?? 'Save failed')
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e ?? 'Save failed')
+      setErr(message)
     }
   }
 
