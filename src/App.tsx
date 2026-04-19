@@ -17,7 +17,21 @@ export default function App() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1">
-        <Suspense fallback={<div className="flex items-center justify-center h-64 text-gray-500">Loading...</div>}>
+        <Suspense fallback={
+          <div className="max-w-6xl mx-auto px-6 py-12">
+            <div className="mb-10">
+              <div className="skeleton h-8 w-48 rounded-full mb-4" />
+              <div className="skeleton h-20 md:h-28 w-full rounded-lg mb-3" />
+              <div className="skeleton h-6 w-3/4 rounded-md" />
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="rounded-2xl skeleton aspect-square shadow-sm" />
+              ))}
+            </div>
+          </div>
+        }>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/portfolio" element={<Portfolio />} />

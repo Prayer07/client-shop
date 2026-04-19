@@ -4,6 +4,8 @@ import { supabase } from '../lib/supabase'
 import type { Product } from '../types'
 import ProductCard from '../components/ProductCard'
 import SearchBar from '../components/SearchBar'
+import { FaShoppingBag } from 'react-icons/fa'
+import { FiSearch } from 'react-icons/fi'
 
 const fetchProducts = async (): Promise<Product[]> => {
   const { data, error } = await supabase
@@ -52,7 +54,7 @@ export default function Shop() {
         {isLoading && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="rounded-2xl bg-blush/30 animate-pulse aspect-square" />
+              <div key={i} className="rounded-2xl bg-blush/30 skeleton aspect-square" />
             ))}
           </div>
         )}
@@ -68,7 +70,7 @@ export default function Shop() {
         {!isLoading && !isError && products?.length === 0 && (
           <div className="text-center py-24">
             <div className="w-16 h-16 rounded-full bg-blush/40 flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">🛍️</span>
+              <FaShoppingBag className="text-2xl text-brown" />
             </div>
             <p className="text-taupe text-sm">No products available yet. Check back soon!</p>
           </div>
@@ -78,7 +80,7 @@ export default function Shop() {
         {!isLoading && !isError && products && products.length > 0 && filtered?.length === 0 && (
           <div className="text-center py-24">
             <div className="w-16 h-16 rounded-full bg-blush/40 flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">🔍</span>
+              <FiSearch className="text-2xl text-brown" />
             </div>
             <p className="text-taupe text-sm">
               No products match{' '}
@@ -99,7 +101,7 @@ export default function Shop() {
             <p className="text-xs text-taupe mb-6 text-center">
               {filtered.length} {filtered.length === 1 ? 'product' : 'products'} found
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 items-stretch">
               {filtered.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}

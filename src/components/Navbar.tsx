@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { FiX } from 'react-icons/fi'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useSettings } from '../lib/useSettings'
@@ -39,6 +40,7 @@ export default function Navbar() {
   }, [isOpen])
 
   // Close drawer on route change
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setIsOpen(false) }, [location.pathname])
 
   const handleLogout = async () => {
@@ -48,25 +50,25 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`sticky top-0 z-50 transition-shadow bg-cream ${scrolled ? 'shadow-md' : 'border-b border-blush/40'}`}>
+      <nav className={`sticky top-0 z-50 transition-shadow glass-blur ${scrolled ? 'shadow-md' : 'border-b border-blush/40'}`}>
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
 
           {/* Logo / Brand */}
           <Link to="/" className="flex items-center gap-3">
             {settings?.logo_url ? (
               <>
-              <img
-                src={settings.logo_url}
-                alt={settings.brand_name ?? 'Logo'}
-                className="h-10 w-auto object-contain"
-              /> 
-              <span className="font-serif text-2xl font-bold text-brown tracking-wide">
-                {settings?.brand_name ?? 'BrandName'}
-              </span>
+                <img
+                  src={settings.logo_url}
+                  alt={settings.brand_name ?? 'Logo'}
+                  className="h-14 md:h-16 w-auto object-contain image-figure"
+                />
+                <span className="hidden md:inline-block font-serif text-2xl font-bold text-brown tracking-wide">
+                  {settings?.brand_name ?? 'Lammyde Beauty and Spa'}
+                </span>
               </>
             ) : (
               <span className="font-serif text-2xl font-bold text-brown tracking-wide">
-                {settings?.brand_name ?? 'BrandName'}
+                {settings?.brand_name ?? 'Lammyde Beauty and Spa'}
               </span>
             )}
           </Link>
@@ -143,7 +145,7 @@ export default function Navbar() {
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-blush/40">
           {settings?.logo_url ? (
-            <img src={settings.logo_url} alt="Logo" className="h-20 w-auto object-contain" />
+            <img src={settings.logo_url} alt="Logo" className="h-24 w-auto object-contain" />
           ) : (
             <span className="font-serif text-lg font-bold text-brown">
               {settings?.brand_name ?? 'BrandName'}
@@ -153,7 +155,7 @@ export default function Navbar() {
             onClick={() => setIsOpen(false)}
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-blush/30 transition-colors text-brown text-lg"
           >
-            ✕
+            <FiX />
           </button>
         </div>
 

@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { RiScalesLine } from 'react-icons/ri'
+import { FaLock } from 'react-icons/fa'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -28,7 +30,7 @@ function SuccessScreen({ onReset }: { onReset: () => void }) {
   return (
     <div className="text-center py-16 px-6">
       <div className="w-20 h-20 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-6">
-        <span className="text-4xl">✨</span>
+        <RiScalesLine className="text-4xl text-brown" />
       </div>
       <h2 className="font-serif text-2xl font-bold text-brown mb-3">Thank You!</h2>
       <p className="text-taupe text-sm leading-relaxed max-w-sm mx-auto mb-8">
@@ -199,7 +201,7 @@ function BeautyHistoryForm() {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } =
     useForm<BeautyForm>({ resolver: zodResolver(beautySchema) })
 
-  const onSubmit = async (_data: BeautyForm) => {
+  const onSubmit = async () => {
     await new Promise(r => setTimeout(r, 800))
     setSubmitted(true)
   }
@@ -377,8 +379,9 @@ export default function Consultation() {
 
   return (
     <section className="min-h-screen bg-cream">
-      <div className="bg-blush/30 border-b border-blush/40">
-        <div className="max-w-3xl mx-auto px-6 py-16 text-center">
+      <div className="relative overflow-hidden bg-blush/30 border-b border-blush/40">
+        <div className="absolute inset-0 -z-10 animated-gradient opacity-60 pointer-events-none" />
+        <div className="max-w-3xl mx-auto px-6 py-16 text-center fade-up">
           <span className="text-xs font-semibold text-gold uppercase tracking-widest">Client Forms</span>
           <h1 className="font-serif text-4xl font-bold text-brown mt-2">Consultation & Consent</h1>
           <p className="text-taupe text-sm mt-3 max-w-md mx-auto leading-relaxed">
@@ -389,7 +392,7 @@ export default function Consultation() {
       </div>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10 fade-up">
           {tabs.map(tab => (
             <button
               key={tab.id}
@@ -411,14 +414,14 @@ export default function Consultation() {
           ))}
         </div>
 
-        <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-7 md:p-10">
+        <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-7 md:p-10 fade-up">
           {activeTab === 'preconsult' && <PreConsultationForm />}
           {activeTab === 'beauty' && <BeautyHistoryForm />}
         </div>
 
         <p className="text-center text-xs text-taupe/50 mt-6">
-          🔒 Your information is confidential and never shared with third parties.
-        </p>
+            <FaLock className="inline mr-1" /> Your information is confidential and never shared with third parties.
+          </p>
       </div>
     </section>
   )

@@ -11,11 +11,12 @@ export default function Footer() {
   ].filter(s => s.url && !s.url.includes('placeholder'))
 
   return (
-    <footer className="bg-brown text-cream/70 mt-auto">
-      <div className="max-w-6xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-3 gap-10">
+    <footer className="relative bg-brown text-cream/70 mt-auto">
+      <div className="absolute inset-0 -z-10 animated-gradient opacity-10 pointer-events-none" />
+      <div className="max-w-6xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-3 gap-10 fade-up">
 
         <div>
-          <h3 className="font-serif text-cream text-xl font-bold mb-3 tracking-wide">
+          <h3 className="font-serif text-cream text-xl font-bold mb-3 tracking-wide image-figure">
             {settings?.brand_name ?? 'BrandName'}
           </h3>
           <p className="text-sm leading-relaxed text-cream/60">

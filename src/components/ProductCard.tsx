@@ -11,19 +11,21 @@ export default function ProductCard({ product }: Props) {
 
   return (
     <>
-      <div className="bg-cream rounded-2xl border border-blush/40 overflow-hidden hover:shadow-lg transition-shadow group flex flex-col">
+      <div className="bg-cream rounded-2xl border border-blush/40 overflow-hidden hover:shadow-lg transition-shadow group flex flex-col h-full">
 
         {/* Image */}
-        <div className="aspect-square overflow-hidden bg-blush/20">
+        <div className="aspect-square overflow-hidden bg-blush/20 relative">
+          {/* skeleton placeholder to mask loading */}
+          <div className="absolute inset-0 z-0 skeleton" aria-hidden="true" />
           {product.image_url ? (
             <img
               src={product.image_url}
               alt={product.name}
               loading="lazy"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 image-figure relative z-10"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-taupe/50 text-xs font-semibold">
+            <div className="w-full h-full flex items-center justify-center text-taupe/50 text-xs font-semibold relative z-10">
               No Image
             </div>
           )}

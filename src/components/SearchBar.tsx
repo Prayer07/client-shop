@@ -1,3 +1,4 @@
+import { FiSearch, FiX } from 'react-icons/fi'
 interface Props {
   value: string
   onChange: (value: string) => void
@@ -6,7 +7,7 @@ interface Props {
 export default function SearchBar({ value, onChange }: Props) {
   return (
     <div className="relative w-full max-w-md">
-      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-taupe/60 text-sm">🔍</span>
+      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-taupe/60 text-sm"><FiSearch /></span>
       <input
         type="text"
         value={value}
@@ -19,7 +20,7 @@ export default function SearchBar({ value, onChange }: Props) {
           onClick={() => onChange('')}
           className="absolute right-4 top-1/2 -translate-y-1/2 text-taupe hover:text-brown transition-colors"
         >
-          ✕
+          <FiX />
         </button>
       )}
     </div>

@@ -40,10 +40,10 @@ export interface Service {
 }
 
 export interface SiteSettings {
-  brand_name: string
-  hero_headline: string
-  hero_tagline: string
-  about_text: string
+  brand_name: string | null
+  hero_headline: string |null
+  hero_tagline: string | null
+  about_text: string | null
   about_image: string | null
   contact_email: string
   contact_whatsapp: string
