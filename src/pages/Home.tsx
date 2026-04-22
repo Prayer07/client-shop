@@ -6,6 +6,7 @@ import ProductCard from '../components/ProductCard'
 import Newsletter from '../components/Newsletter'
 import { useSettings } from '../lib/useSettings'
 import { motion } from 'framer-motion'
+import heroImg from '../../images/img2.jpg'
 
 const fetchFeaturedProducts = async (): Promise<Product[]> => {
   const { data, error } = await supabase
@@ -29,6 +30,7 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-blush/30 border-b border-blush/40">
+        <img src={heroImg} alt="Hero" className="absolute inset-0 -z-20 w-full h-full object-cover" />
         <div className="absolute inset-0 -z-10 animated-gradient opacity-60 pointer-events-none" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
