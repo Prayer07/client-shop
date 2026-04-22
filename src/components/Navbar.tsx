@@ -19,7 +19,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
-  const { data: settings } = useSettings()
+  const { data: settings, isLoading: settingsLoading } = useSettings()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session))
@@ -55,7 +55,12 @@ export default function Navbar() {
 
           {/* Logo / Brand */}
           <Link to="/" className="flex items-center gap-3">
-            {settings?.logo_url ? (
+            {settingsLoading ? (
+              <>
+                <div className="skeleton h-14 w-14 rounded-md" />
+                <span className="hidden md:inline-block skeleton h-6 w-36 rounded-md" />
+              </>
+            ) : settings?.logo_url ? (
               <>
                 <img
                   src={settings.logo_url}
@@ -144,7 +149,12 @@ export default function Navbar() {
       >
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-blush/40">
-          {settings?.logo_url ? (
+          {settingsLoading ? (
+            <div className="flex items-center gap-3">
+              <div className="skeleton h-24 w-24 rounded-md" />
+              <div className="skeleton h-6 w-32 rounded-md" />
+            </div>
+          ) : settings?.logo_url ? (
             <img src={settings.logo_url} alt="Logo" className="h-24 w-auto object-contain" />
           ) : (
             <span className="font-serif text-lg font-bold text-brown">

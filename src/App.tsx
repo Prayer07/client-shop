@@ -11,6 +11,7 @@ const Login = lazy(() => import('./admin/Login'))
 const Dashboard = lazy(() => import('./admin/Dashboard'))
 const Consultation = lazy(() => import('./pages/Consultation'))
 const Services = lazy(() => import('./pages/Services'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 export default function App() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/consultation" element={<Consultation />} />
             <Route path="/services" element={<Services />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>
