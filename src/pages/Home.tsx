@@ -232,16 +232,69 @@ const ProductsGrid = memo(({ products }: { products: Product[] }) => {
   )
 })
 
-const AboutSection = memo(({ settings }: any) => (
-  <section className="bg-blush/20 py-24 px-6 text-center">
-    <h2 className="font-serif text-4xl font-black text-brown mb-6">
-      About the Brand
-    </h2>
-    <p className="max-w-2xl mx-auto text-brown/70">
-      {settings?.about_text}
-    </p>
-  </section>
-))
+const AboutSection = memo(({ settings }: { settings: any }) => {
+  const { ref, isVisible } = useIntersectionObserver({
+    threshold: 0.2,
+    // triggerOnce: true,
+  })
+
+  return (
+    <section className="bg-blush/20 border-y border-blush/40">
+      <div
+        ref={ref}
+        className={`max-w-6xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+        }`}
+      >
+        {/* TEXT */}
+        <div>
+          <span className="text-xs font-bold text-gold uppercase tracking-widest">
+            About
+          </span>
+
+          <h2 className="font-serif text-3xl md:text-4xl font-black text-brown mt-2 mb-4">
+            A little about the brand
+          </h2>
+
+          <p className="text-brown/70 font-medium text-sm leading-relaxed max-w-md">
+            {settings?.about_text ??
+              'This is a short paragraph about your brand, your story, and what makes you special.'}
+          </p>
+        </div>
+
+        {/* IMAGE / LOGO */}
+        <div className="flex justify-center md:justify-end">
+          <div className="relative w-64 h-64 rounded-full overflow-hidden border-4 border-cream bg-blush/50 shadow-md group">
+
+            {settings?.about_image ? (
+              <img
+                src={settings.about_image}
+                alt="Brand"
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            ) : settings?.logo_url ? (
+              <img
+                src={settings.logo_url}
+                alt="Logo"
+                loading="lazy"
+                decoding="async"
+                className="w-2/3 h-2/3 object-contain mx-auto my-auto"
+              />
+            ) : (
+              <span className="text-brown/40 font-semibold text-sm flex items-center justify-center h-full">
+                Brand
+              </span>
+            )}
+
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+)
 
 const CTASection = memo(() => (
   <section className="bg-brown py-20 text-center">
