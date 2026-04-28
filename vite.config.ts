@@ -1,31 +1,30 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  plugins: [
-    react(),
-  ],
+  plugins: [react()],
+
   build: {
     rollupOptions: {
       output: {
         manualChunks: {
-          // Vendor chunks for better caching
-          'react-vendor': ['react', 'react-router-dom', 'react-dom'],
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'query-vendor': ['@tanstack/react-query'],
           'ui-vendor': ['react-icons'],
-          'supabase': ['@supabase/supabase-js'],
+          'supabase-vendor': ['@supabase/supabase-js'],
         },
       },
     },
-    chunkSizeWarningLimit: 1000, // Increase limit since we're optimizing chunks
+    chunkSizeWarningLimit: 1000,
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true, // Remove console logs in production
+        drop_console: true,
       },
     },
   },
+
   server: {
-    preTransformRequests: ['react', 'react-router-dom'],
+    preTransformRequests: true,
   },
-})
+});
