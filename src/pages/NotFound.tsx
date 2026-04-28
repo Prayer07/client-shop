@@ -1,14 +1,16 @@
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { useIntersectionObserver } from '../lib/useIntersectionObserver'
 
 export default function NotFound() {
+  const { ref, isVisible } = useIntersectionObserver()
+
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="max-w-2xl mx-auto px-6 py-16 text-center"
+      <div
+        ref={ref}
+        className={`max-w-2xl mx-auto px-6 py-16 text-center transition-all duration-700 ${
+          isVisible ? 'animate-fade-up opacity-100' : 'opacity-0'
+        }`}
       >
         <span className="text-xs font-bold text-gold uppercase tracking-widest">404</span>
         <h1 className="font-serif text-4xl md:text-5xl font-black text-brown mt-4">Page not found</h1>
@@ -29,7 +31,7 @@ export default function NotFound() {
             Contact Us
           </Link>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }

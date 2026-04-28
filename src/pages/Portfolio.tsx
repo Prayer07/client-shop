@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
 import type { PortfolioItem } from '../types'
 import { FiImage } from 'react-icons/fi'
+import { useIntersectionObserver } from '../lib/useIntersectionObserver'
 
 const fetchPortfolio = async (): Promise<PortfolioItem[]> => {
   const { data, error } = await supabase
@@ -70,45 +71,7 @@ export default function Portfolio() {
 
         {/* Grid */}
         {!isLoading && items && items.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
-            {items.map(item => (
-              <div
-                key={item.id}
-                className="group bg-cream rounded-2xl border border-blush/40 overflow-hidden hover:shadow-lg transition-all duration-300 fade-up"
-              >
-                <div className="aspect-square overflow-hidden bg-blush/20 relative">
-                  <div className="absolute inset-0 z-0 skeleton" aria-hidden="true" />
-                  {item.image_url ? (
-                    <img
-                      src={item.image_url}
-                      alt={item.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 image-figure relative z-10"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-brown/30 font-semibold text-sm relative z-10">
-                      No Image
-                    </div>
-                  )}
-                </div>
-                <div className="p-5">
-                  {item.category && (
-                    <span className="text-xs font-bold text-gold uppercase tracking-widest">
-                      {item.category}
-                    </span>
-                  )}
-                  <h3 className="font-serif font-black text-brown mt-1 text-base">
-                    {item.title}
-                  </h3>
-                  {item.description && (
-                    <p className="text-sm font-medium text-brown/60 mt-2 leading-relaxed">
-                      {item.description}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+          <PortfolioGrid items={items} />
         )}
 
         {/* Bottom CTA */}
@@ -130,5 +93,57 @@ export default function Portfolio() {
 
       </div>
     </section>
+  )
+}
+
+// ─── Portfolio Grid Component ────────────────────────────────────────────────────
+function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
+  const { ref, isVisible } = useIntersectionObserver({ threshold: 0.1 })
+
+  return (
+    <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+      {items.map((item, i) => (
+        <div
+          key={item.id}
+          className={`group bg-cream rounded-2xl border border-blush/40 overflow-hidden hover:shadow-lg transition-all duration-300 ${
+            isVisible ? 'animate-fade-up' : 'opacity-0'
+          }`}
+          style={{
+            animationDelay: isVisible ? `${i * 100}ms` : '0',
+          }}
+        >
+          <div className="aspect-square overflow-hidden bg-blush/20 relative">
+            <div className="absolute inset-0 z-0 skeleton" aria-hidden="true" />
+            {item.image_url ? (
+              <img
+                src={item.image_url}
+                alt={item.title}
+                loading="lazy"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 image-figure relative z-10"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-brown/30 font-semibold text-sm relative z-10">
+                No Image
+              </div>
+            )}
+          </div>
+          <div className="p-5">
+            {item.category && (
+              <span className="text-xs font-bold text-gold uppercase tracking-widest">
+                {item.category}
+              </span>
+            )}
+            <h3 className="font-serif font-black text-brown mt-1 text-base">
+              {item.title}
+            </h3>
+            {item.description && (
+              <p className="text-sm font-medium text-brown/60 mt-2 leading-relaxed">
+                {item.description}
+              </p>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
   )
 }
