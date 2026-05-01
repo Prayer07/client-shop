@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import Img3 from "/images/Img3.jpg"
+import Img3 from "../../images/img3.jpg"
 
 export default function FloatingImg() {
   const [isOpen, setIsOpen] = useState(false)
