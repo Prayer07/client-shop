@@ -3,10 +3,9 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
 import type { Service } from '../types'
 import { FaSpa } from 'react-icons/fa'
-import { FiClock } from 'react-icons/fi'
-import { RiScalesLine } from 'react-icons/ri'
 
-const CALENDLY_URL = 'https://calendly.com/lammydebeautyspa/makeover'
+// const CALENDLY_URL = 'https://calendly.com/lammydebeautyspa/makeover'
+const CALENDLY_URL = 'https://www.fresha.com/book-now/lammyde-beauty-and-spa-lounge-edhwy0eh/all-offer?share=true&pId=2757671'
 
 declare global {
   interface Window { Calendly?: { initPopupWidget: (opts: { url: string }) => void } }
@@ -44,11 +43,9 @@ export default function Services() {
     }
   }, [])
 
-  const openCalendly = () => {
-    if (window.Calendly) {
-      window.Calendly.initPopupWidget({ url: CALENDLY_URL })
-    } else {
-      window.open(CALENDLY_URL, '_blank')
+  const openBooking = (url: string) => {
+    if (url === CALENDLY_URL) {
+      window.open(url, '_blank');
     }
   }
 
@@ -66,7 +63,7 @@ export default function Services() {
             radiant and completely at ease.
           </p>
           <button
-            onClick={openCalendly}
+            onClick={() => openBooking(CALENDLY_URL)}
             className="mt-8 bg-brown text-cream text-sm font-bold px-8 py-3 rounded-full hover:bg-brown/80 transition-colors tracking-wide inline-block"
           >
             Book an Appointment
@@ -104,7 +101,7 @@ export default function Services() {
           </div>
         )}
 
-        {/* Grid */}
+        {/* Grid
         {!isLoading && services && services.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {services.map(service => (
@@ -132,7 +129,7 @@ export default function Services() {
                   )}
                 </div>
                 <button
-                  onClick={openCalendly}
+                  onClick={() => openBooking(CALENDLY_URL)}
                   className="w-full border-2 border-brown text-brown text-xs font-bold py-2 rounded-full hover:bg-brown hover:text-cream transition-colors tracking-wide"
                 >
                   Book Now
@@ -140,7 +137,7 @@ export default function Services() {
               </div>
             ))}
           </div>
-        )}
+        )} */}
 
       </div>
 
@@ -164,7 +161,7 @@ export default function Services() {
               Consultation Form
             </a>
             <button
-              onClick={openCalendly}
+              onClick={() => openBooking(CALENDLY_URL)}
               className="bg-gold text-brown text-sm font-bold px-6 py-3 rounded-full hover:bg-gold/80 transition-colors tracking-wide"
             >
               Book Now
