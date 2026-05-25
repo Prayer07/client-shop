@@ -12,8 +12,10 @@ const Contact = lazy(() => import('./pages/Contact'))
 const Login = lazy(() => import('./admin/Login'))
 const Dashboard = lazy(() => import('./admin/Dashboard'))
 const Consultation = lazy(() => import('./pages/Consultation'))
-const Services = lazy(() => import('./pages/Services'))
+// const Services = lazy(() => import('./pages/Services'))
 const NotFound = lazy(() => import('./pages/NotFound'))
+const SkincareTreatment = lazy(() => import('./pages/SkincareTreatment'))
+const BeautyLounge = lazy(() => import('./pages/BeautyLounge'))
 
 export default function App() {
   return (
@@ -45,7 +47,9 @@ export default function App() {
             <Route path="/admin" element={<Login />} />
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/consultation" element={<Consultation />} />
-            <Route path="/services" element={<Services />} />
+            {/* <Route path="/services" element={<Services />} /> */}
+            <Route path="/portfolio/skincare-treatment" element={<SkincareTreatment />} />
+            <Route path="/portfolio/beauty-lounge" element={<BeautyLounge />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

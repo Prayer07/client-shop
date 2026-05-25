@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+// import { useQuery } from '@tanstack/react-query'
 import { memo, useMemo } from 'react'
-import { supabase } from '../lib/supabase'
-import type { Product } from '../types'
-import ProductCard from '../components/ProductCard'
+// import { supabase } from '../lib/supabase'
+// import type { Product } from '../types'
+// import ProductCard from '../components/ProductCard'
 import Newsletter from '../components/Newsletter'
 import { useSettings } from '../lib/useSettings'
 import { useIntersectionObserver } from '../lib/useIntersectionObserver'
@@ -11,25 +11,25 @@ import heroImg from '../../images/img2.webp'
 import BlurText from '../components/reactbits/BlurText'
 import TextType from '../components/reactbits/TextType'
 
-const fetchFeaturedProducts = async (): Promise<Product[]> => {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(4)
+// const fetchFeaturedProducts = async (): Promise<Product[]> => {
+//   const { data, error } = await supabase
+//     .from('products')
+//     .select('*')
+//     .order('created_at', { ascending: false })
+//     .limit(4)
 
-  if (error) throw new Error(error.message)
-  return data
-}
+//   if (error) throw new Error(error.message)
+//   return data
+// }
 
 export default function Home() {
-  const { data: featured = [], isLoading } = useQuery({
-    queryKey: ['featured-products'],
-    queryFn: fetchFeaturedProducts,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
-  })
+  // const { data: featured = [], isLoading } = useQuery({
+  //   queryKey: ['featured-products'],
+  //   queryFn: fetchFeaturedProducts,
+  //   staleTime: 1000 * 60 * 5,
+  //   gcTime: 1000 * 60 * 10,
+  //   refetchOnWindowFocus: false,
+  // })
 
   const {
     data: settings,
@@ -113,7 +113,7 @@ export default function Home() {
       </section>
 
       {/* FEATURED */}
-      <section className="max-w-6xl mx-auto px-6 py-24 w-full">
+      {/* <section className="max-w-6xl mx-auto px-6 py-24 w-full">
         <SectionHeader
           eyebrow="Collection"
           title="Featured Products"
@@ -125,7 +125,7 @@ export default function Home() {
         ) : (
           <ProductsGrid products={featured} />
         )}
-      </section>
+      </section> */}
 
       <AboutSection settings={settings} />
 
@@ -179,58 +179,58 @@ const CTAButton = memo(
   )
 )
 
-const SectionHeader = memo(
-  ({
-    eyebrow,
-    title,
-    subtitle,
-  }: {
-    eyebrow: string
-    title: string
-    subtitle: string
-  }) => (
-    <div className="mb-12">
-      <span className="text-xs font-bold text-gold uppercase tracking-widest">
-        {eyebrow}
-      </span>
-      <h2 className="font-serif text-4xl font-black text-brown mt-2">
-        {title}
-      </h2>
-      <p className="text-brown/60 mt-2">{subtitle}</p>
-    </div>
-  )
-)
+// const SectionHeader = memo(
+//   ({
+//     eyebrow,
+//     title,
+//     subtitle,
+//   }: {
+//     eyebrow: string
+//     title: string
+//     subtitle: string
+//   }) => (
+//     <div className="mb-12">
+//       <span className="text-xs font-bold text-gold uppercase tracking-widest">
+//         {eyebrow}
+//       </span>
+//       <h2 className="font-serif text-4xl font-black text-brown mt-2">
+//         {title}
+//       </h2>
+//       <p className="text-brown/60 mt-2">{subtitle}</p>
+//     </div>
+//   )
+// )
 
-const ProductSkeleton = memo(() => (
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-    {Array.from({ length: 4 }).map((_, i) => (
-      <div key={i} className="aspect-square rounded-2xl bg-blush/20 animate-pulse" />
-    ))}
-  </div>
-))
+// const ProductSkeleton = memo(() => (
+//   <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+//     {Array.from({ length: 4 }).map((_, i) => (
+//       <div key={i} className="aspect-square rounded-2xl bg-blush/20 animate-pulse" />
+//     ))}
+//   </div>
+// ))
 
-const ProductsGrid = memo(({ products }: { products: Product[] }) => {
-  const { ref, isVisible } = useIntersectionObserver({
-    threshold: 0.2,
-    // triggerOnce: true,
-  })
+// const ProductsGrid = memo(({ products }: { products: Product[] }) => {
+//   const { ref, isVisible } = useIntersectionObserver({
+//     threshold: 0.2,
+//     // triggerOnce: true,
+//   })
 
-  return (
-    <div ref={ref} className="grid grid-cols-2 md:grid-cols-4 gap-5">
-      {products.map((product, i) => (
-        <div
-          key={product.id}
-          className={`transition-all duration-500 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-          style={{ transitionDelay: `${i * 80}ms` }}
-        >
-          <ProductCard product={product} />
-        </div>
-      ))}
-    </div>
-  )
-})
+//   return (
+//     <div ref={ref} className="grid grid-cols-2 md:grid-cols-4 gap-5">
+//       {products.map((product, i) => (
+//         <div
+//           key={product.id}
+//           className={`transition-all duration-500 ${
+//             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+//           }`}
+//           style={{ transitionDelay: `${i * 80}ms` }}
+//         >
+//           <ProductCard product={product} />
+//         </div>
+//       ))}
+//     </div>
+//   )
+// })
 
 const AboutSection = memo(({ settings }: { settings: any }) => {
   const { ref, isVisible } = useIntersectionObserver({

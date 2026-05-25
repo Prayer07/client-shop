@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase'
 
 const navLinks = [
   { label: 'Home', path: '/' },
-  { label: 'Services', path: '/services' },
+  // { label: 'Services', path: '/services' },
   { label: 'Portfolio', path: '/portfolio' },
   { label: 'Shop', path: '/shop' },
   { label: 'Consultation', path: '/consultation' },

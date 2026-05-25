@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase'
 import type { PortfolioItem } from '../types'
 import { FiImage } from 'react-icons/fi'
 import { useIntersectionObserver } from '../lib/useIntersectionObserver'
+import { Link } from 'react-router-dom'
 
 const fetchPortfolio = async (): Promise<PortfolioItem[]> => {
   const { data, error } = await supabase
@@ -138,7 +139,10 @@ function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
             </h3>
             {item.description && (
               <p className="text-sm font-medium text-brown/60 mt-2 leading-relaxed">
-                {item.description}
+                {item.description.slice(0, 100)}{item.description.length > 100 && '...'}
+                <Link to={item.title.toLowerCase().replace(/\s+/g, '-')} className="text-gold font-bold text-sm hover:underline">
+                  See more
+                </Link>
               </p>
             )}
           </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import ProductsTab from './tabs/ProductsTab'
+// import ProductsTab from './tabs/ProductsTab'
 import PortfolioTab from './tabs/PortfolioTab'
 import ServicesTab from './tabs/ServicesTab'
 import SettingsTab from './tabs/SettingsTab'
@@ -12,9 +12,9 @@ import AccountTab from './tabs/AccountTab'
 type Tab = 'products' | 'portfolio' | 'services' | 'settings' | 'enquiries' | 'subscribers' | 'account'
 
 const tabs: { id: Tab; label: string }[] = [
-  { id: 'products', label: 'Products' },
+  // { id: 'products', label: 'Products' },
   { id: 'portfolio', label: 'Portfolio' },
-  { id: 'services', label: 'Services' },
+  // { id: 'services', label: 'Services' },
   { id: 'settings', label: 'Site Settings' },
   { id: 'enquiries', label: 'Enquiries' },
   { id: 'subscribers', label: 'Subscribers' },
@@ -22,7 +22,7 @@ const tabs: { id: Tab; label: string }[] = [
 ]
 
 export default function Dashboard() {
-  const [active, setActive] = useState<Tab>('products')
+  const [active, setActive] = useState<Tab>('portfolio')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function Dashboard() {
           </nav>
         </aside>
         <main className="md:col-span-3">
-          {active === 'products' && <ProductsTab />}
+          {/* {active === 'products' && <ProductsTab />} */}
           {active === 'portfolio' && <PortfolioTab />}
           {active === 'services' && <ServicesTab />}
           {active === 'settings' && <SettingsTab />}
