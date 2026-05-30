@@ -83,6 +83,6 @@ export interface SiteSettings {
   social_instagram: string
   social_facebook: string
   social_tiktok: string
-  logo_url: string
-  about_image: string
+  logo_url: string | null
+  about_image: string | null
 }
