@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import Header from './components/Header'
-import Navbar from './components/Navbar'
+// import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import FloatingImg from './components/FloatingImg'
 
@@ -14,15 +14,15 @@ const Dashboard = lazy(() => import('./admin/Dashboard'))
 const Consultation = lazy(() => import('./pages/Consultation'))
 // const Services = lazy(() => import('./pages/Services'))
 const NotFound = lazy(() => import('./pages/NotFound'))
-const SkincareTreatment = lazy(() => import('./pages/SkincareTreatment'))
-const BeautyLounge = lazy(() => import('./pages/BeautyLounge'))
+const OurStory = lazy(() => import('./pages/OurStory'))
+const SpaPackage = lazy(() => import('./pages/SpaPackage'))
 
 export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <FloatingImg />
       <Header />
-      <Navbar />
+      {/* <Navbar /> */}
       <main className="flex-1">
         <Suspense fallback={
           <div className="max-w-6xl mx-auto px-6 py-12">
@@ -41,15 +41,15 @@ export default function App() {
         }>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/portfolios" element={<Portfolio />} />
             {/* <Route path="/shop" element={<Shop />} /> */}
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin" element={<Login />} />
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/consultation" element={<Consultation />} />
             {/* <Route path="/services" element={<Services />} /> */}
-            <Route path="/portfolio/skincare-treatment" element={<SkincareTreatment />} />
-            <Route path="/portfolio/beauty-lounge" element={<BeautyLounge />} />
+            <Route path="/our-story" element={<OurStory />} />
+            <Route path="/spa-packages" element={<SpaPackage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

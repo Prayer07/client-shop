@@ -5,10 +5,10 @@ import { supabase } from '../lib/supabase'
 
 const navLinks = [
   { label: 'Home', path: '/' },
-  // { label: 'Services', path: '/services' },
-  { label: 'Portfolio', path: '/portfolio' },
-  // { label: 'Shop', path: '/shop' },
-  { label: 'Consultation', path: '/consultation' },
+  { label: 'Our Story', path: '/our-story' },
+  { label: 'Services', path: '/services' },
+  { label: 'Portfolios', path: '/portfolio' },
+  { label: 'Spa Packages', path: '/spa-packages' },
   { label: 'Contact', path: '/contact' },
 ]
 
@@ -145,7 +145,7 @@ export default function Navbar() {
             <div className="flex flex-col gap-1.5">
               <span className="w-6 h-0.5 bg-brown" />
               <span className="w-6 h-0.5 bg-brown" />
-              <span className="w-5 h-0.5 bg-brown" />
+              <span className="w-6 h-0.5 bg-brown" />
             </div>
           </button>
         </div>
