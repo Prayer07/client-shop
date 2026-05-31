@@ -126,7 +126,7 @@ function PreConsultationForm() {
             <input type="date" {...register('preferred_date')} className={input} />
           </div>
           <div className="md:col-span-2">
-            <label className={label}>Why are you visiting today? *</label>
+            <label className={label}>What can you tell us about your skin? Please share as much information as you know, including any concerns, sensitivities, or skincare goals*</label>
             <textarea
               {...register('visit_reason')}
               rows={3}
