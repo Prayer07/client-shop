@@ -72,7 +72,7 @@ export default function Home() {
             <ErrorState onRetry={refetch} />
           ) : (
             <>
-              <span className="text-xl font-bold text-gold uppercase tracking-widest mb-5">
+              <span className="text-xl font-bold text-white uppercase tracking-widest mb-5">
                 Welcome
               </span>
 

@@ -2,13 +2,15 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { FiX } from 'react-icons/fi'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { useSettings } from '../lib/useSettings'
 
 const navLinks = [
   { label: 'Home', path: '/' },
   { label: 'Our Story', path: '/our-story' },
   { label: 'Services', path: '/services' },
-  { label: 'Portfolios', path: '/portfolios' },
+  // { label: 'Portfolios', path: '/portfolios' },
   { label: 'Spa Packages', path: '/spa-packages' },
+  { label: 'Consultation', path: '/consultation' },
   { label: 'Contacts', path: '/contact' },
 ]
 
@@ -18,6 +20,7 @@ export default function Header() {
 
   const location = useLocation()
   const navigate = useNavigate()
+  const { data: settings } = useSettings()
 
   const activePath = useMemo(() => location.pathname, [location.pathname])
 
@@ -64,9 +67,16 @@ export default function Header() {
         <div className="md:hidden">
           <div className="relative px-6 h-[72px] flex items-center justify-center">
 
-            <Link to="/">
-              <h1 className="font-verdana text-lg font-semibold text-brown text-center">
-                Lammyde Beauty & Spa Lounge
+            <Link to="/" className="flex items-center gap-3">
+              {settings?.logo_url && (
+                <img
+                  src={settings.logo_url}
+                  alt={settings.brand_name ?? 'Logo'}
+                  className="h-12 w-auto object-contain"
+                />
+              )}
+              <h1 className="font-verdana text-base font-semibold text-brown">
+                {settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
               </h1>
             </Link>
 
@@ -87,10 +97,17 @@ export default function Header() {
         <div className="hidden md:block">
 
           {/* Brand Name */}
-          <div className="max-w-6xl mx-auto py-6 text-center">
-            <Link to="/">
+          <div className="max-w-6xl mx-auto py-6 text-center flex items-center justify-center gap-4">
+            <Link to="/" className="flex items-center gap-4">
+              {settings?.logo_url && (
+                <img
+                  src={settings.logo_url}
+                  alt={settings.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
+                  className="h-16 w-auto object-contain"
+                />
+              )}
               <h1 className="font-verdana text-3xl font-semibold text-brown tracking-wide">
-                Lammyde Beauty & Spa Lounge
+                {settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
               </h1>
             </Link>
           </div>
