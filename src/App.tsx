@@ -6,7 +6,7 @@ import Footer from './components/Footer'
 import FloatingImg from './components/FloatingImg'
 
 const Home = lazy(() => import('./pages/Home'))
-const Portfolio = lazy(() => import('./pages/Portfolio'))
+const Portfolio = lazy(() => import('./pages/Services'))
 // const Shop = lazy(() => import('./pages/Shop'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Login = lazy(() => import('./admin/Login'))

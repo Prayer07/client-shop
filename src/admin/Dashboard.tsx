@@ -69,13 +69,13 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
-import type{ Product, PortfolioCategory, PortfolioService, SpaPackage, Service } from '../types'
+import type{ PortfolioCategory, PortfolioService, SpaPackage } from '../types'
 
 // ─── FETCH FUNCTIONS ──────────────────────────────────────────────────────────
-const fetchProducts = async (): Promise<Product[]> => {
-  const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false })
-  if (error) throw error; return data
-}
+// const fetchProducts = async (): Promise<Product[]> => {
+//   const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false })
+//   if (error) throw error; return data
+// }
 const fetchPortfolioCategories = async (): Promise<PortfolioCategory[]> => {
   const { data, error } = await supabase.from('portfolio_categories').select('*').order('display_order', { ascending: true })
   if (error) throw error; return data
@@ -88,10 +88,10 @@ const fetchSpaPackages = async (): Promise<SpaPackage[]> => {
   const { data, error } = await supabase.from('spa_packages').select('*').order('display_order', { ascending: true })
   if (error) throw error; return data
 }
-const fetchServices = async (): Promise<Service[]> => {
-  const { data, error } = await supabase.from('services').select('*').order('display_order', { ascending: true })
-  if (error) throw error; return data
-}
+// const fetchServices = async (): Promise<Service[]> => {
+//   const { data, error } = await supabase.from('services').select('*').order('display_order', { ascending: true })
+//   if (error) throw error; return data
+// }
 const fetchSettings = async (): Promise<Record<string, string>> => {
   const { data, error } = await supabase.from('site_settings').select('id, value')
   if (error) throw error
@@ -120,14 +120,14 @@ function SectionHeader({ label, title }: { label: string; title: string }) {
 }
 
 // ─── TAB TYPE ─────────────────────────────────────────────────────────────────
-type Tab = 'products' | 'portfolio_cats' | 'portfolio_services' | 'spa_packages' | 'services' | 'settings' | 'enquiries' | 'subscribers' | 'account'
+type Tab = 'portfolio_cats' | 'portfolio_services' | 'spa_packages' | 'services' | 'settings' | 'enquiries' | 'subscribers' | 'account'
 
 const tabs: { id: Tab; emoji: string; label: string }[] = [
-  { id: 'products', emoji: '🛍️', label: 'Products' },
-  { id: 'portfolio_cats', emoji: '🗂️', label: 'Portfolio Categories' },
-  { id: 'portfolio_services', emoji: '💆', label: 'Portfolio Services' },
+  // { id: 'products', emoji: '🛍️', label: 'Products' },
+  { id: 'portfolio_cats', emoji: '🗂️', label: 'Service Categories' },
+  { id: 'portfolio_services', emoji: '💆', label: 'Services' },
   { id: 'spa_packages', emoji: '🌿', label: 'Spa Packages' },
-  { id: 'services', emoji: '✨', label: 'Services' },
+  // { id: 'services', emoji: '✨', label: 'Services' },
   { id: 'settings', emoji: '⚙️', label: 'Site Settings' },
   { id: 'enquiries', emoji: '📬', label: 'Enquiries' },
   { id: 'subscribers', emoji: '💌', label: 'Subscribers' },
@@ -135,160 +135,160 @@ const tabs: { id: Tab; emoji: string; label: string }[] = [
 ]
 
 // ─── PRODUCTS TAB ─────────────────────────────────────────────────────────────
-type EditField = 'price' | 'price_image' | 'all'
-interface EditState {
-  product: Product; field: EditField
-  name: string; description: string; price: string
-  imageFile: File | null; imagePreview: string | null
-}
+// type EditField = 'price' | 'price_image' | 'all'
+// interface EditState {
+//   product: Product; field: EditField
+//   name: string; description: string; price: string
+//   imageFile: File | null; imagePreview: string | null
+// }
 
-function ProductsTab() {
-  const queryClient = useQueryClient()
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [price, setPrice] = useState('')
-  const [imageFile, setImageFile] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
-  const [uploading, setUploading] = useState(false)
-  const [formError, setFormError] = useState('')
-  const [successMsg, setSuccessMsg] = useState('')
-  const [editState, setEditState] = useState<EditState | null>(null)
-  const [editUploading, setEditUploading] = useState(false)
-  const [editError, setEditError] = useState('')
-  const [editSuccess, setEditSuccess] = useState('')
+// function ProductsTab() {
+//   const queryClient = useQueryClient()
+//   const [name, setName] = useState('')
+//   const [description, setDescription] = useState('')
+//   const [price, setPrice] = useState('')
+//   const [imageFile, setImageFile] = useState<File | null>(null)
+//   const [imagePreview, setImagePreview] = useState<string | null>(null)
+//   const [uploading, setUploading] = useState(false)
+//   const [formError, setFormError] = useState('')
+//   const [successMsg, setSuccessMsg] = useState('')
+//   const [editState, setEditState] = useState<EditState | null>(null)
+//   const [editUploading, setEditUploading] = useState(false)
+//   const [editError, setEditError] = useState('')
+//   const [editSuccess, setEditSuccess] = useState('')
 
-  const { data: products, isLoading } = useQuery({ queryKey: ['products'], queryFn: fetchProducts })
+//   const { data: products, isLoading } = useQuery({ queryKey: ['products'], queryFn: fetchProducts })
 
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from('products').delete().eq('id', id)
-      if (error) throw error
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
-  })
+//   const deleteMutation = useMutation({
+//     mutationFn: async (id: string) => {
+//       const { error } = await supabase.from('products').delete().eq('id', id)
+//       if (error) throw error
+//     },
+//     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
+//   })
 
-  const uploadImage = async (file: File) => {
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${Date.now()}.${fileExt}`
-    const { error } = await supabase.storage.from('product-images').upload(fileName, file)
-    if (error) throw error
-    const { data } = supabase.storage.from('product-images').getPublicUrl(fileName)
-    return data.publicUrl
-  }
+//   const uploadImage = async (file: File) => {
+//     const fileExt = file.name.split('.').pop()
+//     const fileName = `${Date.now()}.${fileExt}`
+//     const { error } = await supabase.storage.from('product-images').upload(fileName, file)
+//     if (error) throw error
+//     const { data } = supabase.storage.from('product-images').getPublicUrl(fileName)
+//     return data.publicUrl
+//   }
 
-  const handleUpload = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setFormError(''); setSuccessMsg('')
-    if (!name || !price) { setFormError('Name and price are required.'); return }
-    setUploading(true)
-    let image_url: string | null = null
-    if (imageFile) {
-      try { image_url = await uploadImage(imageFile) }
-      catch { setFormError('Image upload failed.'); setUploading(false); return }
-    }
-    const { error } = await supabase.from('products').insert([{ name, description: description || null, price: parseFloat(price), image_url }])
-    if (error) { setFormError('Failed to save product.'); setUploading(false); return }
-    setName(''); setDescription(''); setPrice(''); setImageFile(null); setImagePreview(null)
-    setUploading(false); setSuccessMsg('Product added!')
-    queryClient.invalidateQueries({ queryKey: ['products'] })
-  }
+//   const handleUpload = async (e: React.FormEvent) => {
+//     e.preventDefault()
+//     setFormError(''); setSuccessMsg('')
+//     if (!name || !price) { setFormError('Name and price are required.'); return }
+//     setUploading(true)
+//     let image_url: string | null = null
+//     if (imageFile) {
+//       try { image_url = await uploadImage(imageFile) }
+//       catch { setFormError('Image upload failed.'); setUploading(false); return }
+//     }
+//     const { error } = await supabase.from('products').insert([{ name, description: description || null, price: parseFloat(price), image_url }])
+//     if (error) { setFormError('Failed to save product.'); setUploading(false); return }
+//     setName(''); setDescription(''); setPrice(''); setImageFile(null); setImagePreview(null)
+//     setUploading(false); setSuccessMsg('Product added!')
+//     queryClient.invalidateQueries({ queryKey: ['products'] })
+//   }
 
-  const handleEditSave = async () => {
-    if (!editState) return
-    setEditError(''); setEditSuccess(''); setEditUploading(true)
-    const updates: Partial<Product> = {}
-    if (editState.field === 'price') updates.price = parseFloat(editState.price)
-    if (editState.field === 'price_image' || editState.field === 'all') {
-      updates.price = parseFloat(editState.price)
-      if (editState.field === 'all') { updates.name = editState.name; updates.description = editState.description || null }
-      if (editState.imageFile) {
-        try { updates.image_url = await uploadImage(editState.imageFile) }
-        catch { setEditError('Image upload failed.'); setEditUploading(false); return }
-      }
-    }
-    const { error } = await supabase.from('products').update(updates).eq('id', editState.product.id)
-    if (error) { setEditError('Update failed.'); setEditUploading(false); return }
-    setEditUploading(false); setEditSuccess('Updated!')
-    queryClient.invalidateQueries({ queryKey: ['products'] })
-    setTimeout(() => setEditState(null), 800)
-  }
+//   const handleEditSave = async () => {
+//     if (!editState) return
+//     setEditError(''); setEditSuccess(''); setEditUploading(true)
+//     const updates: Partial<Product> = {}
+//     if (editState.field === 'price') updates.price = parseFloat(editState.price)
+//     if (editState.field === 'price_image' || editState.field === 'all') {
+//       updates.price = parseFloat(editState.price)
+//       if (editState.field === 'all') { updates.name = editState.name; updates.description = editState.description || null }
+//       if (editState.imageFile) {
+//         try { updates.image_url = await uploadImage(editState.imageFile) }
+//         catch { setEditError('Image upload failed.'); setEditUploading(false); return }
+//       }
+//     }
+//     const { error } = await supabase.from('products').update(updates).eq('id', editState.product.id)
+//     if (error) { setEditError('Update failed.'); setEditUploading(false); return }
+//     setEditUploading(false); setEditSuccess('Updated!')
+//     queryClient.invalidateQueries({ queryKey: ['products'] })
+//     setTimeout(() => setEditState(null), 800)
+//   }
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-      <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
-        <SectionHeader label="New Product" title="Add a Product" />
-        <form onSubmit={handleUpload} className="flex flex-col gap-4">
-          <div><label className={label}>Product Name *</label><input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Glow Serum" className={input} /></div>
-          <div><label className={label}>Description</label><textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} className={`${input} resize-none`} placeholder="Optional..." /></div>
-          <div><label className={label}>Price (CAD) *</label><input value={price} onChange={e => setPrice(e.target.value)} type="number" min="0" step="0.01" placeholder="25.00" className={input} /></div>
-          <div>
-            <label className={label}>Product Image</label>
-            <input type="file" accept="image/*" onChange={e => { const f = e.target.files?.[0]; if (f) { setImageFile(f); setImagePreview(URL.createObjectURL(f)) } }} className="w-full text-sm text-taupe file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-brown file:text-cream hover:file:bg-brown/80 cursor-pointer" />
-            {imagePreview && <img src={imagePreview} className="mt-3 w-24 h-24 object-cover rounded-xl border border-blush/40" />}
-          </div>
-          {formError && <p className="text-xs text-red-400">{formError}</p>}
-          {successMsg && <p className="text-xs text-green-600">{successMsg}</p>}
-          <button type="submit" disabled={uploading} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{uploading ? 'Uploading...' : 'Add Product'}</button>
-        </form>
-      </div>
-      <div>
-        <SectionHeader label="Inventory" title="All Products" />
-        {isLoading && <div className="flex flex-col gap-3">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-20 rounded-xl bg-blush/30 animate-pulse" />)}</div>}
-        {!isLoading && (!products || products.length === 0) && <p className="text-sm font-medium text-brown/50">No products yet.</p>}
-        {!isLoading && products && products.length > 0 && (
-          <div className="flex flex-col gap-3">
-            {products.map(p => (
-              <div key={p.id} className="bg-white border border-blush/40 rounded-xl p-3 shadow-sm">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-blush/20 shrink-0 border border-blush/30">
-                    {p.image_url ? <img src={p.image_url} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-brown/30 text-xs font-semibold">N/A</div>}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-black text-brown truncate font-serif">{p.name}</p>
-                    <p className="text-xs font-semibold text-brown/50">${p.price.toFixed(2)} CAD</p>
-                  </div>
-                  <button onClick={() => confirm(`Delete "${p.name}"?`) && deleteMutation.mutate(p.id)} className="text-xs text-red-300 hover:text-red-500 font-bold transition-colors shrink-0">Delete</button>
-                </div>
-                <div className="flex gap-2 mt-2 pt-2 border-t border-blush/20 flex-wrap">
-                  <span className="text-xs text-brown/40 self-center font-semibold mr-1">Edit:</span>
-                  {(['price', 'price_image', 'all'] as EditField[]).map((f, i) => (
-                    <button key={f} onClick={() => setEditState({ product: p, field: f, name: p.name, description: p.description ?? '', price: p.price.toString(), imageFile: null, imagePreview: null })} className="text-xs bg-cream border border-blush/40 hover:border-gold/40 hover:text-gold text-taupe px-3 py-1 rounded-full transition-colors font-semibold">
-                      {['Price only', 'Price + Image', 'Everything'][i]}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      {editState && (
-        <div className="fixed inset-0 z-50 bg-brown/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setEditState(null)}>
-          <div className="bg-cream rounded-2xl shadow-2xl w-full max-w-md p-7 border border-blush/40" onClick={e => e.stopPropagation()}>
-            <div className="flex items-start justify-between mb-5">
-              <div><h2 className="font-serif text-xl font-black text-brown">Edit Product</h2><p className="text-xs font-medium text-brown/50 mt-0.5">{editState.product.name}</p></div>
-              <button onClick={() => setEditState(null)} className="text-taupe hover:text-brown text-xl">✕</button>
-            </div>
-            <div className="flex flex-col gap-4">
-              {editState.field === 'all' && (<><div><label className={label}>Name</label><input value={editState.name} onChange={e => setEditState({ ...editState, name: e.target.value })} className={input} /></div><div><label className={label}>Description</label><textarea value={editState.description} onChange={e => setEditState({ ...editState, description: e.target.value })} rows={2} className={`${input} resize-none`} /></div></>)}
-              <div><label className={label}>Price (CAD)</label><input value={editState.price} onChange={e => setEditState({ ...editState, price: e.target.value })} type="number" min="0" step="0.01" className={input} /></div>
-              {(editState.field === 'price_image' || editState.field === 'all') && (
-                <div>
-                  <label className={label}>New Image <span className="font-normal text-brown/40">(optional)</span></label>
-                  <input type="file" accept="image/*" onChange={e => { const f = e.target.files?.[0]; if (f && editState) setEditState({ ...editState, imageFile: f, imagePreview: URL.createObjectURL(f) }) }} className="w-full text-sm text-taupe file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-brown file:text-cream hover:file:bg-brown/80 cursor-pointer" />
-                  {(editState.imagePreview || editState.product.image_url) && <img src={editState.imagePreview ?? editState.product.image_url!} className="mt-3 w-24 h-24 object-cover rounded-xl border border-blush/40" />}
-                </div>
-              )}
-              {editError && <p className="text-xs text-red-400">{editError}</p>}
-              {editSuccess && <p className="text-xs text-green-600">{editSuccess}</p>}
-              <button onClick={handleEditSave} disabled={editUploading} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{editUploading ? 'Saving...' : 'Save Changes'}</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
+//   return (
+//     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+//       <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
+//         <SectionHeader label="New Product" title="Add a Product" />
+//         <form onSubmit={handleUpload} className="flex flex-col gap-4">
+//           <div><label className={label}>Product Name *</label><input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Glow Serum" className={input} /></div>
+//           <div><label className={label}>Description</label><textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} className={`${input} resize-none`} placeholder="Optional..." /></div>
+//           <div><label className={label}>Price (CAD) *</label><input value={price} onChange={e => setPrice(e.target.value)} type="number" min="0" step="0.01" placeholder="25.00" className={input} /></div>
+//           <div>
+//             <label className={label}>Product Image</label>
+//             <input type="file" accept="image/*" onChange={e => { const f = e.target.files?.[0]; if (f) { setImageFile(f); setImagePreview(URL.createObjectURL(f)) } }} className="w-full text-sm text-taupe file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-brown file:text-cream hover:file:bg-brown/80 cursor-pointer" />
+//             {imagePreview && <img src={imagePreview} className="mt-3 w-24 h-24 object-cover rounded-xl border border-blush/40" />}
+//           </div>
+//           {formError && <p className="text-xs text-red-400">{formError}</p>}
+//           {successMsg && <p className="text-xs text-green-600">{successMsg}</p>}
+//           <button type="submit" disabled={uploading} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{uploading ? 'Uploading...' : 'Add Product'}</button>
+//         </form>
+//       </div>
+//       <div>
+//         <SectionHeader label="Inventory" title="All Products" />
+//         {isLoading && <div className="flex flex-col gap-3">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-20 rounded-xl bg-blush/30 animate-pulse" />)}</div>}
+//         {!isLoading && (!products || products.length === 0) && <p className="text-sm font-medium text-brown/50">No products yet.</p>}
+//         {!isLoading && products && products.length > 0 && (
+//           <div className="flex flex-col gap-3">
+//             {products.map(p => (
+//               <div key={p.id} className="bg-white border border-blush/40 rounded-xl p-3 shadow-sm">
+//                 <div className="flex items-center gap-3">
+//                   <div className="w-12 h-12 rounded-xl overflow-hidden bg-blush/20 shrink-0 border border-blush/30">
+//                     {p.image_url ? <img src={p.image_url} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-brown/30 text-xs font-semibold">N/A</div>}
+//                   </div>
+//                   <div className="flex-1 min-w-0">
+//                     <p className="text-sm font-black text-brown truncate font-serif">{p.name}</p>
+//                     <p className="text-xs font-semibold text-brown/50">${p.price.toFixed(2)} CAD</p>
+//                   </div>
+//                   <button onClick={() => confirm(`Delete "${p.name}"?`) && deleteMutation.mutate(p.id)} className="text-xs text-red-300 hover:text-red-500 font-bold transition-colors shrink-0">Delete</button>
+//                 </div>
+//                 <div className="flex gap-2 mt-2 pt-2 border-t border-blush/20 flex-wrap">
+//                   <span className="text-xs text-brown/40 self-center font-semibold mr-1">Edit:</span>
+//                   {(['price', 'price_image', 'all'] as EditField[]).map((f, i) => (
+//                     <button key={f} onClick={() => setEditState({ product: p, field: f, name: p.name, description: p.description ?? '', price: p.price.toString(), imageFile: null, imagePreview: null })} className="text-xs bg-cream border border-blush/40 hover:border-gold/40 hover:text-gold text-taupe px-3 py-1 rounded-full transition-colors font-semibold">
+//                       {['Price only', 'Price + Image', 'Everything'][i]}
+//                     </button>
+//                   ))}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         )}
+//       </div>
+//       {editState && (
+//         <div className="fixed inset-0 z-50 bg-brown/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setEditState(null)}>
+//           <div className="bg-cream rounded-2xl shadow-2xl w-full max-w-md p-7 border border-blush/40" onClick={e => e.stopPropagation()}>
+//             <div className="flex items-start justify-between mb-5">
+//               <div><h2 className="font-serif text-xl font-black text-brown">Edit Product</h2><p className="text-xs font-medium text-brown/50 mt-0.5">{editState.product.name}</p></div>
+//               <button onClick={() => setEditState(null)} className="text-taupe hover:text-brown text-xl">✕</button>
+//             </div>
+//             <div className="flex flex-col gap-4">
+//               {editState.field === 'all' && (<><div><label className={label}>Name</label><input value={editState.name} onChange={e => setEditState({ ...editState, name: e.target.value })} className={input} /></div><div><label className={label}>Description</label><textarea value={editState.description} onChange={e => setEditState({ ...editState, description: e.target.value })} rows={2} className={`${input} resize-none`} /></div></>)}
+//               <div><label className={label}>Price (CAD)</label><input value={editState.price} onChange={e => setEditState({ ...editState, price: e.target.value })} type="number" min="0" step="0.01" className={input} /></div>
+//               {(editState.field === 'price_image' || editState.field === 'all') && (
+//                 <div>
+//                   <label className={label}>New Image <span className="font-normal text-brown/40">(optional)</span></label>
+//                   <input type="file" accept="image/*" onChange={e => { const f = e.target.files?.[0]; if (f && editState) setEditState({ ...editState, imageFile: f, imagePreview: URL.createObjectURL(f) }) }} className="w-full text-sm text-taupe file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-brown file:text-cream hover:file:bg-brown/80 cursor-pointer" />
+//                   {(editState.imagePreview || editState.product.image_url) && <img src={editState.imagePreview ?? editState.product.image_url!} className="mt-3 w-24 h-24 object-cover rounded-xl border border-blush/40" />}
+//                 </div>
+//               )}
+//               {editError && <p className="text-xs text-red-400">{editError}</p>}
+//               {editSuccess && <p className="text-xs text-green-600">{editSuccess}</p>}
+//               <button onClick={handleEditSave} disabled={editUploading} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{editUploading ? 'Saving...' : 'Save Changes'}</button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   )
+// }
 
 // ─── PORTFOLIO CATEGORIES TAB ─────────────────────────────────────────────────
 function PortfolioCategoriesTab() {
@@ -375,7 +375,7 @@ function PortfolioCategoriesTab() {
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
-          <SectionHeader label="New Category" title="Add Portfolio Category" />
+          <SectionHeader label="New Category" title="Add Service Category" />
           <form onSubmit={handleAdd} className="flex flex-col gap-4">
             <div><label className={label}>Category Name *</label><input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Skincare Treatments" className={input} /></div>
             <div><label className={label}>Description</label><textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} placeholder="Short description..." className={`${input} resize-none`} /></div>
@@ -391,7 +391,7 @@ function PortfolioCategoriesTab() {
         </div>
 
         <div>
-          <SectionHeader label="All Categories" title="Portfolio Categories" />
+          <SectionHeader label="All Categories" title="Service Categories" />
           {isLoading && <div className="flex flex-col gap-3">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-16 rounded-xl bg-blush/30 animate-pulse" />)}</div>}
           {!isLoading && (!categories || categories.length === 0) && <p className="text-sm font-medium text-brown/50">No categories yet.</p>}
           {!isLoading && categories && categories.length > 0 && (
@@ -527,13 +527,13 @@ function PortfolioServicesTab() {
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
-          <SectionHeader label="New Service" title="Add Portfolio Service" />
+          <SectionHeader label="New Service" title="Add Services" />
           <form onSubmit={handleAdd} className="flex flex-col gap-4">
             <div>
               <label className={label}>Category *</label>
               <select value={selectedCatId} onChange={e => setSelectedCatId(e.target.value)} className={input}>
                 <option value="">Select a category...</option>
-                {categories?.map(cat => <option key={cat.id} value={cat.id}>{cat.emoji} {cat.name}</option>)}
+                {categories?.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
               </select>
             </div>
             <div><label className={label}>Service Name *</label><input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Classic Spa Facial" className={input} /></div>
@@ -552,11 +552,11 @@ function PortfolioServicesTab() {
           </form>
         </div>
         <div>
-          <SectionHeader label="Services" title="Portfolio Services" />
+          <SectionHeader label="Services" title="Services" />
           <div className="mb-4">
             <select value={selectedCatId} onChange={e => setSelectedCatId(e.target.value)} className={input}>
               <option value="">Select category to view services...</option>
-              {categories?.map(cat => <option key={cat.id} value={cat.id}>{cat.emoji} {cat.name}</option>)}
+              {categories?.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
             </select>
           </div>
           {!selectedCatId && <p className="text-sm font-medium text-brown/50">Select a category above to view its services.</p>}
@@ -618,6 +618,7 @@ function SpaPackagesTab() {
   const queryClient = useQueryClient()
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [duration, setDuration] = useState('')
   const [includes, setIncludes] = useState('')
   const [price, setPrice] = useState('')
   const [saving, setSaving] = useState(false)
@@ -626,6 +627,7 @@ function SpaPackagesTab() {
   const [editPkg, setEditPkg] = useState<SpaPackage | null>(null)
   const [editName, setEditName] = useState('')
   const [editDescription, setEditDescription] = useState('')
+  const [editDuration, setEditDuration] = useState('')
   const [editIncludes, setEditIncludes] = useState('')
   const [editPrice, setEditPrice] = useState('')
   const [editSaving, setEditSaving] = useState(false)
@@ -652,10 +654,10 @@ function SpaPackagesTab() {
     setSaving(true)
     const display_order = (packages?.length ?? 0) + 1
     const { error } = await supabase.from('spa_packages').insert([{
-      name, description: description || null, includes: parseIncludes(includes), price: price || null, display_order
+      name, description: description || null, includes: parseIncludes(includes), price: price || null, duration: duration || null, display_order
     }])
     if (error) { setFormError('Failed to save.'); setSaving(false); return }
-    setName(''); setDescription(''); setIncludes(''); setPrice('')
+    setName(''); setDescription(''); setIncludes(''); setPrice(''); setDuration('')
     setSaving(false); setSuccessMsg('Package added!')
     queryClient.invalidateQueries({ queryKey: ['spa-packages'] })
   }
@@ -663,6 +665,7 @@ function SpaPackagesTab() {
   const openEdit = (pkg: SpaPackage) => {
     setEditPkg(pkg); setEditName(pkg.name); setEditDescription(pkg.description ?? '')
     setEditIncludes((pkg.includes ?? []).join('\n')); setEditPrice(pkg.price ?? '')
+    setEditDuration(pkg.duration ?? '')
     setEditError(''); setEditSuccess('')
   }
 
@@ -671,7 +674,7 @@ function SpaPackagesTab() {
     setEditError(''); setEditSuccess(''); setEditSaving(true)
     const { error } = await supabase.from('spa_packages').update({
       name: editName, description: editDescription || null,
-      includes: parseIncludes(editIncludes), price: editPrice || null
+      includes: parseIncludes(editIncludes), price: editPrice || null, duration: editDuration || null
     }).eq('id', editPkg.id)
     if (error) { setEditError('Update failed.'); setEditSaving(false); return }
     setEditSaving(false); setEditSuccess('Updated!')
@@ -687,6 +690,7 @@ function SpaPackagesTab() {
           <form onSubmit={handleAdd} className="flex flex-col gap-4">
             <div><label className={label}>Package Name *</label><input value={name} onChange={e => setName(e.target.value)} placeholder='e.g. "I Love My Body" Package' className={input} /></div>
             <div><label className={label}>Description</label><textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} placeholder="Short description..." className={`${input} resize-none`} /></div>
+            <div><label className={label}>Duration</label><input value={duration} onChange={e => setDuration(e.target.value)} placeholder="e.g. 60 mins" className={input} /></div>
             <div>
               <label className={label}>What's Included <span className="font-normal text-brown/40">(one item per line)</span></label>
               <textarea value={includes} onChange={e => setIncludes(e.target.value)} rows={4} placeholder={"Deluxe Spa Facial\nDeluxe Spa Manicure\nComplimentary Aromatherapy"} className={`${input} resize-none`} />
@@ -708,7 +712,7 @@ function SpaPackagesTab() {
                   <div className="flex items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-black text-brown truncate font-serif">{pkg.name}</p>
-                      <p className="text-xs font-semibold text-brown/50">{pkg.price} · {pkg.includes?.length ?? 0} items</p>
+                      <p className="text-xs font-semibold text-brown/50">{pkg.price} · {pkg.includes?.length ?? 0} items · {pkg.duration || 'N/A'}</p>
                     </div>
                     <button onClick={() => confirm(`Delete "${pkg.name}"?`) && deleteMutation.mutate(pkg.id)} className="text-xs text-red-300 hover:text-red-500 font-bold transition-colors shrink-0">Delete</button>
                   </div>
@@ -731,6 +735,7 @@ function SpaPackagesTab() {
             <div className="flex flex-col gap-4">
               <div><label className={label}>Name *</label><input value={editName} onChange={e => setEditName(e.target.value)} className={input} /></div>
               <div><label className={label}>Description</label><textarea value={editDescription} onChange={e => setEditDescription(e.target.value)} rows={2} className={`${input} resize-none`} /></div>
+              <div><label className={label}>Duration</label><input value={editDuration} onChange={e => setEditDuration(e.target.value)} placeholder="e.g. 60 mins" className={input} /></div>
               <div>
                 <label className={label}>What's Included <span className="font-normal text-brown/40">(one per line)</span></label>
                 <textarea value={editIncludes} onChange={e => setEditIncludes(e.target.value)} rows={4} className={`${input} resize-none`} />
@@ -748,159 +753,159 @@ function SpaPackagesTab() {
 }
 
 // ─── SERVICES TAB ─────────────────────────────────────────────────────────────
-function ServicesTab() {
-  const queryClient = useQueryClient()
-  const [emoji, setEmoji] = useState('')
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [duration, setDuration] = useState('')
-  const [price, setPrice] = useState('')
-  const [bookingUrl, setBookingUrl] = useState('')
-  const [saving, setSaving] = useState(false)
-  const [formError, setFormError] = useState('')
-  const [successMsg, setSuccessMsg] = useState('')
-  const [editService, setEditService] = useState<Service | null>(null)
-  const [editEmoji, setEditEmoji] = useState('')
-  const [editTitle, setEditTitle] = useState('')
-  const [editDescription, setEditDescription] = useState('')
-  const [editDuration, setEditDuration] = useState('')
-  const [editPrice, setEditPrice] = useState('')
-  const [editBookingUrl, setEditBookingUrl] = useState('')
-  const [editSaving, setEditSaving] = useState(false)
-  const [editError, setEditError] = useState('')
-  const [editSuccess, setEditSuccess] = useState('')
+// function ServicesTab() {
+//   const queryClient = useQueryClient()
+//   const [emoji, setEmoji] = useState('')
+//   const [title, setTitle] = useState('')
+//   const [description, setDescription] = useState('')
+//   const [duration, setDuration] = useState('')
+//   const [price, setPrice] = useState('')
+//   const [bookingUrl, setBookingUrl] = useState('')
+//   const [saving, setSaving] = useState(false)
+//   const [formError, setFormError] = useState('')
+//   const [successMsg, setSuccessMsg] = useState('')
+//   const [editService, setEditService] = useState<Service | null>(null)
+//   const [editEmoji, setEditEmoji] = useState('')
+//   const [editTitle, setEditTitle] = useState('')
+//   const [editDescription, setEditDescription] = useState('')
+//   const [editDuration, setEditDuration] = useState('')
+//   const [editPrice, setEditPrice] = useState('')
+//   const [editBookingUrl, setEditBookingUrl] = useState('')
+//   const [editSaving, setEditSaving] = useState(false)
+//   const [editError, setEditError] = useState('')
+//   const [editSuccess, setEditSuccess] = useState('')
 
-  const { data: services, isLoading } = useQuery({ queryKey: ['services'], queryFn: fetchServices })
+//   const { data: services, isLoading } = useQuery({ queryKey: ['services'], queryFn: fetchServices })
 
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from('services').delete().eq('id', id)
-      if (error) throw error
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['services'] }),
-  })
+//   const deleteMutation = useMutation({
+//     mutationFn: async (id: string) => {
+//       const { error } = await supabase.from('services').delete().eq('id', id)
+//       if (error) throw error
+//     },
+//     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['services'] }),
+//   })
 
-  const handleAdd = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setFormError(''); setSuccessMsg('')
-    if (!title) { setFormError('Title is required.'); return }
-    setSaving(true)
-    const display_order = (services?.length ?? 0) + 1
-    const { error } = await supabase.from('services').insert([{ emoji: emoji || null, title, description: description || null, duration: duration || null, price: price || null, booking_url: bookingUrl || null, display_order }])
-    if (error) { setFormError('Failed to save service.'); setSaving(false); return }
-    setEmoji(''); setTitle(''); setDescription(''); setDuration(''); setPrice(''); setBookingUrl('')
-    setSaving(false); setSuccessMsg('Service added!')
-    queryClient.invalidateQueries({ queryKey: ['services'] })
-  }
+//   const handleAdd = async (e: React.FormEvent) => {
+//     e.preventDefault()
+//     setFormError(''); setSuccessMsg('')
+//     if (!title) { setFormError('Title is required.'); return }
+//     setSaving(true)
+//     const display_order = (services?.length ?? 0) + 1
+//     const { error } = await supabase.from('services').insert([{ emoji: emoji || null, title, description: description || null, duration: duration || null, price: price || null, booking_url: bookingUrl || null, display_order }])
+//     if (error) { setFormError('Failed to save service.'); setSaving(false); return }
+//     setEmoji(''); setTitle(''); setDescription(''); setDuration(''); setPrice(''); setBookingUrl('')
+//     setSaving(false); setSuccessMsg('Service added!')
+//     queryClient.invalidateQueries({ queryKey: ['services'] })
+//   }
 
-  const openEdit = (s: Service) => {
-    setEditService(s); setEditEmoji(s.emoji ?? ''); setEditTitle(s.title)
-    setEditDescription(s.description ?? ''); setEditDuration(s.duration ?? '')
-    setEditPrice(s.price ?? ''); setEditBookingUrl(s.booking_url ?? '')
-    setEditError(''); setEditSuccess('')
-  }
+//   const openEdit = (s: Service) => {
+//     setEditService(s); setEditEmoji(s.emoji ?? ''); setEditTitle(s.title)
+//     setEditDescription(s.description ?? ''); setEditDuration(s.duration ?? '')
+//     setEditPrice(s.price ?? ''); setEditBookingUrl(s.booking_url ?? '')
+//     setEditError(''); setEditSuccess('')
+//   }
 
-  const handleEditSave = async () => {
-    if (!editService) return
-    setEditError(''); setEditSuccess(''); setEditSaving(true)
-    const { error } = await supabase.from('services').update({
-      emoji: editEmoji || null, title: editTitle, description: editDescription || null,
-      duration: editDuration || null, price: editPrice || null, booking_url: editBookingUrl || null,
-    }).eq('id', editService.id)
-    if (error) { setEditError('Update failed.'); setEditSaving(false); return }
-    setEditSaving(false); setEditSuccess('Updated!')
-    queryClient.invalidateQueries({ queryKey: ['services'] })
-    setTimeout(() => setEditService(null), 800)
-  }
+//   const handleEditSave = async () => {
+//     if (!editService) return
+//     setEditError(''); setEditSuccess(''); setEditSaving(true)
+//     const { error } = await supabase.from('services').update({
+//       emoji: editEmoji || null, title: editTitle, description: editDescription || null,
+//       duration: editDuration || null, price: editPrice || null, booking_url: editBookingUrl || null,
+//     }).eq('id', editService.id)
+//     if (error) { setEditError('Update failed.'); setEditSaving(false); return }
+//     setEditSaving(false); setEditSuccess('Updated!')
+//     queryClient.invalidateQueries({ queryKey: ['services'] })
+//     setTimeout(() => setEditService(null), 800)
+//   }
 
-  return (
-    <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
-          <SectionHeader label="New Service" title="Add a Service" />
-          <form onSubmit={handleAdd} className="flex flex-col gap-4">
-            <div className="grid grid-cols-4 gap-3">
-              <div className="col-span-1"><label className={label}>Emoji</label><input value={emoji} onChange={e => setEmoji(e.target.value)} placeholder="💆‍♀️" className={input} /></div>
-              <div className="col-span-3"><label className={label}>Title *</label><input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Massage Therapy" className={input} /></div>
-            </div>
-            <div><label className={label}>Description</label><textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} placeholder="What does this service include?" className={`${input} resize-none`} /></div>
-            <div className="grid grid-cols-2 gap-3">
-              <div><label className={label}>Duration</label><input value={duration} onChange={e => setDuration(e.target.value)} placeholder="e.g. 60 mins" className={input} /></div>
-              <div><label className={label}>Price</label><input value={price} onChange={e => setPrice(e.target.value)} placeholder="e.g. From $85" className={input} /></div>
-            </div>
-            <div>
-              <label className={label}>Booking URL</label>
-              <select value={bookingUrl} onChange={e => setBookingUrl(e.target.value)} className={input}>
-                <option value="">Select booking system...</option>
-                <option value="https://calendly.com/lammydebeautyspa/makeover">Calendly (Makeup Services)</option>
-                <option value="https://www.fresha.com/a/lammyde-beauty-lounge">Fresha (Spa Services)</option>
-              </select>
-            </div>
-            {formError && <p className="text-xs text-red-400">{formError}</p>}
-            {successMsg && <p className="text-xs text-green-600">{successMsg}</p>}
-            <button type="submit" disabled={saving} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{saving ? 'Saving...' : 'Add Service'}</button>
-          </form>
-        </div>
-        <div>
-          <SectionHeader label="Menu" title="All Services" />
-          {isLoading && <div className="flex flex-col gap-3">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-20 rounded-xl bg-blush/30 animate-pulse" />)}</div>}
-          {!isLoading && (!services || services.length === 0) && <p className="text-sm font-medium text-brown/50">No services yet.</p>}
-          {!isLoading && services && services.length > 0 && (
-            <div className="flex flex-col gap-3">
-              {services.map(s => (
-                <div key={s.id} className="bg-white border border-blush/40 rounded-xl p-3 shadow-sm">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-blush/30 flex items-center justify-center text-xl shrink-0">{s.emoji ?? '✨'}</div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-black text-brown truncate font-serif">{s.title}</p>
-                      <p className="text-xs font-semibold text-brown/50">{s.duration}{s.price && ` · ${s.price}`}</p>
-                    </div>
-                    <button onClick={() => confirm(`Delete "${s.title}"?`) && deleteMutation.mutate(s.id)} className="text-xs text-red-300 hover:text-red-500 font-bold transition-colors shrink-0">Delete</button>
-                  </div>
-                  <div className="mt-2 pt-2 border-t border-blush/20">
-                    <button onClick={() => openEdit(s)} className="text-xs bg-cream border border-blush/40 hover:border-gold/40 hover:text-gold text-taupe px-3 py-1 rounded-full transition-colors font-semibold">Edit</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-      {editService && (
-        <div className="fixed inset-0 z-50 bg-brown/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setEditService(null)}>
-          <div className="bg-cream rounded-2xl shadow-2xl w-full max-w-md p-7 border border-blush/40" onClick={e => e.stopPropagation()}>
-            <div className="flex items-start justify-between mb-5">
-              <div><h2 className="font-serif text-xl font-black text-brown">Edit Service</h2><p className="text-xs font-medium text-brown/50 mt-0.5">{editService.title}</p></div>
-              <button onClick={() => setEditService(null)} className="text-taupe hover:text-brown text-xl">✕</button>
-            </div>
-            <div className="flex flex-col gap-4">
-              <div className="grid grid-cols-4 gap-3">
-                <div className="col-span-1"><label className={label}>Emoji</label><input value={editEmoji} onChange={e => setEditEmoji(e.target.value)} className={input} /></div>
-                <div className="col-span-3"><label className={label}>Title *</label><input value={editTitle} onChange={e => setEditTitle(e.target.value)} className={input} /></div>
-              </div>
-              <div><label className={label}>Description</label><textarea value={editDescription} onChange={e => setEditDescription(e.target.value)} rows={2} className={`${input} resize-none`} /></div>
-              <div className="grid grid-cols-2 gap-3">
-                <div><label className={label}>Duration</label><input value={editDuration} onChange={e => setEditDuration(e.target.value)} className={input} /></div>
-                <div><label className={label}>Price</label><input value={editPrice} onChange={e => setEditPrice(e.target.value)} className={input} /></div>
-              </div>
-              <div>
-                <label className={label}>Booking System</label>
-                <select value={editBookingUrl} onChange={e => setEditBookingUrl(e.target.value)} className={input}>
-                  <option value="">Select booking system...</option>
-                  <option value="https://calendly.com/lammydebeautyspa/makeover">Calendly (Makeup Services)</option>
-                  <option value="https://www.fresha.com/a/lammyde-beauty-lounge">Fresha (Spa Services)</option>
-                </select>
-              </div>
-              {editError && <p className="text-xs text-red-400">{editError}</p>}
-              {editSuccess && <p className="text-xs text-green-600">{editSuccess}</p>}
-              <button onClick={handleEditSave} disabled={editSaving} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{editSaving ? 'Saving...' : 'Save Changes'}</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  )
-}
+//   return (
+//     <>
+//       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+//         <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
+//           <SectionHeader label="New Service" title="Add a Service" />
+//           <form onSubmit={handleAdd} className="flex flex-col gap-4">
+//             <div className="grid grid-cols-4 gap-3">
+//               <div className="col-span-1"><label className={label}>Emoji</label><input value={emoji} onChange={e => setEmoji(e.target.value)} placeholder="💆‍♀️" className={input} /></div>
+//               <div className="col-span-3"><label className={label}>Title *</label><input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Massage Therapy" className={input} /></div>
+//             </div>
+//             <div><label className={label}>Description</label><textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} placeholder="What does this service include?" className={`${input} resize-none`} /></div>
+//             <div className="grid grid-cols-2 gap-3">
+//               <div><label className={label}>Duration</label><input value={duration} onChange={e => setDuration(e.target.value)} placeholder="e.g. 60 mins" className={input} /></div>
+//               <div><label className={label}>Price</label><input value={price} onChange={e => setPrice(e.target.value)} placeholder="e.g. From $85" className={input} /></div>
+//             </div>
+//             <div>
+//               <label className={label}>Booking URL</label>
+//               <select value={bookingUrl} onChange={e => setBookingUrl(e.target.value)} className={input}>
+//                 <option value="">Select booking system...</option>
+//                 <option value="https://calendly.com/lammydebeautyspa/makeover">Calendly (Makeup Services)</option>
+//                 <option value="https://www.fresha.com/a/lammyde-beauty-lounge">Fresha (Spa Services)</option>
+//               </select>
+//             </div>
+//             {formError && <p className="text-xs text-red-400">{formError}</p>}
+//             {successMsg && <p className="text-xs text-green-600">{successMsg}</p>}
+//             <button type="submit" disabled={saving} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{saving ? 'Saving...' : 'Add Service'}</button>
+//           </form>
+//         </div>
+//         <div>
+//           <SectionHeader label="Menu" title="All Services" />
+//           {isLoading && <div className="flex flex-col gap-3">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-20 rounded-xl bg-blush/30 animate-pulse" />)}</div>}
+//           {!isLoading && (!services || services.length === 0) && <p className="text-sm font-medium text-brown/50">No services yet.</p>}
+//           {!isLoading && services && services.length > 0 && (
+//             <div className="flex flex-col gap-3">
+//               {services.map(s => (
+//                 <div key={s.id} className="bg-white border border-blush/40 rounded-xl p-3 shadow-sm">
+//                   <div className="flex items-center gap-3">
+//                     <div className="w-10 h-10 rounded-full bg-blush/30 flex items-center justify-center text-xl shrink-0">{s.emoji ?? '✨'}</div>
+//                     <div className="flex-1 min-w-0">
+//                       <p className="text-sm font-black text-brown truncate font-serif">{s.title}</p>
+//                       <p className="text-xs font-semibold text-brown/50">{s.duration}{s.price && ` · ${s.price}`}</p>
+//                     </div>
+//                     <button onClick={() => confirm(`Delete "${s.title}"?`) && deleteMutation.mutate(s.id)} className="text-xs text-red-300 hover:text-red-500 font-bold transition-colors shrink-0">Delete</button>
+//                   </div>
+//                   <div className="mt-2 pt-2 border-t border-blush/20">
+//                     <button onClick={() => openEdit(s)} className="text-xs bg-cream border border-blush/40 hover:border-gold/40 hover:text-gold text-taupe px-3 py-1 rounded-full transition-colors font-semibold">Edit</button>
+//                   </div>
+//                 </div>
+//               ))}
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//       {editService && (
+//         <div className="fixed inset-0 z-50 bg-brown/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setEditService(null)}>
+//           <div className="bg-cream rounded-2xl shadow-2xl w-full max-w-md p-7 border border-blush/40" onClick={e => e.stopPropagation()}>
+//             <div className="flex items-start justify-between mb-5">
+//               <div><h2 className="font-serif text-xl font-black text-brown">Edit Service</h2><p className="text-xs font-medium text-brown/50 mt-0.5">{editService.title}</p></div>
+//               <button onClick={() => setEditService(null)} className="text-taupe hover:text-brown text-xl">✕</button>
+//             </div>
+//             <div className="flex flex-col gap-4">
+//               <div className="grid grid-cols-4 gap-3">
+//                 <div className="col-span-1"><label className={label}>Emoji</label><input value={editEmoji} onChange={e => setEditEmoji(e.target.value)} className={input} /></div>
+//                 <div className="col-span-3"><label className={label}>Title *</label><input value={editTitle} onChange={e => setEditTitle(e.target.value)} className={input} /></div>
+//               </div>
+//               <div><label className={label}>Description</label><textarea value={editDescription} onChange={e => setEditDescription(e.target.value)} rows={2} className={`${input} resize-none`} /></div>
+//               <div className="grid grid-cols-2 gap-3">
+//                 <div><label className={label}>Duration</label><input value={editDuration} onChange={e => setEditDuration(e.target.value)} className={input} /></div>
+//                 <div><label className={label}>Price</label><input value={editPrice} onChange={e => setEditPrice(e.target.value)} className={input} /></div>
+//               </div>
+//               <div>
+//                 <label className={label}>Booking System</label>
+//                 <select value={editBookingUrl} onChange={e => setEditBookingUrl(e.target.value)} className={input}>
+//                   <option value="">Select booking system...</option>
+//                   <option value="https://calendly.com/lammydebeautyspa/makeover">Calendly (Makeup Services)</option>
+//                   <option value="https://www.fresha.com/a/lammyde-beauty-lounge">Fresha (Spa Services)</option>
+//                 </select>
+//               </div>
+//               {editError && <p className="text-xs text-red-400">{editError}</p>}
+//               {editSuccess && <p className="text-xs text-green-600">{editSuccess}</p>}
+//               <button onClick={handleEditSave} disabled={editSaving} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{editSaving ? 'Saving...' : 'Save Changes'}</button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </>
+//   )
+// }
 
 // ─── LOGO UPLOAD ──────────────────────────────────────────────────────────────
 function LogoUpload({ onUploaded, currentUrl }: { onUploaded: (url: string) => void; currentUrl?: string }) {
@@ -1250,7 +1255,7 @@ function AccountTab() {
 // ─── MAIN DASHBOARD ───────────────────────────────────────────────────────────
 export default function Dashboard() {
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState<Tab>('products')
+  const [activeTab, setActiveTab] = useState<Tab>('portfolio_cats')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -1293,11 +1298,11 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {activeTab === 'products' && <ProductsTab />}
+        {/* {activeTab === 'products' && <ProductsTab />} */}
         {activeTab === 'portfolio_cats' && <PortfolioCategoriesTab />}
         {activeTab === 'portfolio_services' && <PortfolioServicesTab />}
         {activeTab === 'spa_packages' && <SpaPackagesTab />}
-        {activeTab === 'services' && <ServicesTab />}
+        {/* {activeTab === 'services' && <ServicesTab />} */}
         {activeTab === 'settings' && <SettingsTab />}
         {activeTab === 'enquiries' && <EnquiriesTab />}
         {activeTab === 'subscribers' && <SubscribersTab />}
