@@ -72,7 +72,7 @@ export default function Header() {
                 <img
                   src={settings.logo_url}
                   alt={settings.brand_name ?? 'Logo'}
-                  className="h-12 w-auto object-contain"
+                  className="h-12 w-auto object-contain border-2 border-blush rounded-lg"
                 />
               )}
               <h1 className="font-verdana text-sm font-semibold text-brown truncate mr-10">
@@ -103,7 +103,7 @@ export default function Header() {
                 <img
                   src={settings.logo_url}
                   alt={settings.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
-                  className="h-16 w-auto object-contain"
+                  className="h-16 w-auto object-contain border-2 border-blush rounded-lg"
                 />
               )}
               <h1 className="font-verdana text-3xl font-semibold text-brown tracking-wide">

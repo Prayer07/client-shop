@@ -3,7 +3,7 @@ import { lazy, Suspense } from 'react'
 import Header from './components/Header'
 // import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import FloatingImg from './components/FloatingImg'
+// import FloatingImg from './components/FloatingImg'
 
 const Home = lazy(() => import('./pages/Home'))
 const Portfolio = lazy(() => import('./pages/Services'))
@@ -20,7 +20,7 @@ const SpaPackage = lazy(() => import('./pages/SpaPackage'))
 export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
-      <FloatingImg />
+      {/* <FloatingImg /> */}
       <Header />
       {/* <Navbar /> */}
       <main className="flex-1">
