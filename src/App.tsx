@@ -20,7 +20,7 @@ const SpaPackage = lazy(() => import('./pages/SpaPackage'))
 export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
-      <FloatingImg />
+      {/* <FloatingImg /> */}
       <Header />
       {/* <Navbar /> */}
       <main className="flex-1">
