@@ -3,7 +3,7 @@ import { useSettings } from '../lib/useSettings'
 const storyParagraphs = [
   `At Lammyde Beauty & Spa Lounge, beauty is more than appearance — it is confidence, care, and the joy reflected in every smile. Our passion has always been rooted in helping people feel beautiful, refreshed, and confident in their own skin.`,
   `The inspiration behind Lammyde began with a simple but powerful lesson from my mother. She often said, "If you love seeing beautiful things, do not just admire them — take a step to create them, because those smiles can bring positive impact to lives around you." Those words became the foundation of a vision built on beauty, purpose, and transformation.`,
-  `Driven by my passion for beauty and wellness, I decided to invest fully in my craft by pursuing professional training in clinical aesthetics at the National Institute of Wellness and Esthetics (N.I.W.E). As a graduate of professional and clinical aesthetics, I gained not only the technical knowledge of skincare and beauty treatments, but also a deeper understanding of the importance of confidence, self-care, and wellness in people's everyday lives.`,
+  `As a graduate of professional and clinical aesthetics, I gained not only the technical knowledge of skincare and beauty treatments, but also a deeper understanding of the importance of confidence, self-care, and wellness in people's everyday lives.`,
   `Lammyde Beauty & Spa Lounge was therefore created as more than just a business — it was built to become a sanctuary and a community for beauty lovers and self-care enthusiasts. Our goal is to meet you wherever you are in your beauty and wellness journey while helping you grow into the most confident version of yourself.`,
   `From skincare treatments and beauty enhancements to makeup artistry and wellness care, every experience is thoughtfully designed with excellence, professionalism, and intentional care.`,
   `Lammyde Beauty & Spa Lounge is more than a beauty destination; it is a place where beauty is curated, confidence is restored, and self-care becomes a lifestyle.`,
@@ -92,9 +92,9 @@ export default function OurStory() {
               key={v.title}
               className="bg-white border border-blush/40 rounded-2xl p-6 hover:shadow-md transition-shadow"
             >
-              <div className="w-12 h-12 rounded-full bg-blush/30 flex items-center justify-center text-2xl mb-4">
+              {/* <div className="w-12 h-12 rounded-full bg-blush/30 flex items-center justify-center text-2xl mb-4">
                 {v.emoji}
-              </div>
+              </div> */}
               <h3 className="font-serif font-black text-brown text-lg mb-2">{v.title}</h3>
               <p className="text-brown/60 font-medium text-sm leading-relaxed">{v.description}</p>
             </div>

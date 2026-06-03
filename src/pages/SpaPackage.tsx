@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
 import type{ SpaPackage } from '../types'
 
-const FRESHA_URL = 'https://www.fresha.com/a/lammyde-beauty-lounge'
+const FRESHA_URL = 'https://www.fresha.com/a/lammyde-beauty-and-spa-lounge-airdrie-3078-chinook-winds-drive-southwest-nk7xbjda/booking?allOffer=true&menu=true&pId=2757671&cartId=a5eb826e-fb79-4249-a8f9-82d0f4e7c58e'
 
 const fetchPackages = async (): Promise<SpaPackage[]> => {
   const { data, error } = await supabase
@@ -89,6 +89,9 @@ export default function SpaPackages() {
                           pkg.name === 'Annual Wellness Membership' ? 'text-gold' : 'text-brown'
                         }`}>
                           {pkg.price}
+                          <span className="text-xs font-normal text-brown/60 ml-2">
+                            ({pkg.duration || 'N/A'})
+                          </span>
                         </span>
                       </div>
                     )}

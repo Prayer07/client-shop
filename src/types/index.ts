@@ -54,6 +54,7 @@ export interface SpaPackage {
   id: string
   name: string
   description: string | null
+  duration: string | null
   includes: string[]
   price: string | null
   display_order: number

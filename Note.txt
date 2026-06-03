@@ -1,22 +1,145 @@
-src/
-├── admin/
-│   ├── Login.tsx
-│   └── Dashboard.tsx
-├── components/
-│   ├── BuyModal.tsx
-│   ├── Navbar.tsx
-│   ├── Footer.tsx
-│   ├── ProductCard.tsx
-│   └── SearchBar.tsx
-├── lib/
-│   └── supabase.ts
-├── pages/
-│   ├── Home.tsx
-│   ├── Portfolio.tsx
-│   ├── Shop.tsx
-│   └── Contact.tsx
-├── types/
-│   └── index.ts
-├── App.tsx
-├── main.tsx
-└── index.css
+src/components/NewsletterPopup.tsx
+
+
+import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
+
+export default function NewsletterPopup() {
+  const [show, setShow] = useState(false)
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+
+  useEffect(() => {
+    const seen = localStorage.getItem('newsletter_popup_seen')
+    if (!seen) {
+      const timer = setTimeout(() => setShow(true), 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
+  const handleClose = () => {
+    localStorage.setItem('newsletter_popup_seen', 'true')
+    setShow(false)
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email) return
+    setStatus('loading')
+    try {
+      const { data, error } = await supabase.functions.invoke('subscribe-beehiiv', {
+        body: { email },
+      })
+      if (error || !data?.success) { setStatus('error'); return }
+      setStatus('success')
+      localStorage.setItem('newsletter_popup_seen', 'true')
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  if (!show) return null
+
+  return (
+    <div className="fixed inset-0 z-50 bg-brown/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-cream rounded-2xl shadow-2xl w-full max-w-md border border-blush/40 overflow-hidden">
+
+        {/* Top accent */}
+        <div className="bg-brown px-6 py-4 flex items-center justify-between">
+          <span className="text-xs font-bold text-gold uppercase tracking-widest">
+            Exclusive Offer
+          </span>
+          <button
+            onClick={handleClose}
+            className="text-cream/60 hover:text-cream transition-colors text-lg"
+          >
+            X
+          </button>
+        </div>
+
+        <div className="px-7 py-8">
+          {status !== 'success' ? (
+            <>
+              {/* Offer */}
+              <div className="text-center mb-7">
+                <div className="inline-block bg-gold/20 border border-gold/30 rounded-full px-4 py-1.5 mb-4">
+                  <span className="text-xs font-black text-brown uppercase tracking-widest">
+                    10% Off Your First Facial
+                  </span>
+                </div>
+                <h2 className="font-serif text-2xl font-black text-brown leading-tight mb-3">
+                  Join Our Newsletter & Save
+                </h2>
+                <p className="text-brown/60 font-medium text-sm leading-relaxed">
+                  Subscribe to our monthly newsletter and receive an exclusive
+                  <span className="text-brown font-black"> 10% discount </span>
+                  on any facial treatment service. Plus beauty tips, seasonal offers
+                  and member-only promotions.
+                </p>
+              </div>
+
+              {/* Promo code preview */}
+              <div className="bg-blush/30 border border-blush rounded-xl px-4 py-3 text-center mb-6">
+                <p className="text-xs font-semibold text-brown/50 mb-1">Your discount code</p>
+                <p className="font-black text-brown text-lg tracking-widest">GLOW10</p>
+                <p className="text-xs font-medium text-brown/40 mt-1">
+                  Sent to your inbox after subscribing
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="Enter your email address"
+                  required
+                  className="w-full border border-blush rounded-full px-5 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold/40 text-brown font-medium placeholder:text-taupe/50"
+                />
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm tracking-wide disabled:opacity-50"
+                >
+                  {status === 'loading' ? 'Subscribing...' : 'Claim My 10% Discount'}
+                </button>
+                {status === 'error' && (
+                  <p className="text-xs text-red-400 text-center">Something went wrong. Please try again.</p>
+                )}
+              </form>
+
+              <button
+                onClick={handleClose}
+                className="w-full text-center text-xs font-medium text-brown/40 hover:text-brown/60 transition-colors mt-4"
+              >
+                No thanks, I'll pay full price
+              </button>
+            </>
+          ) : (
+            <div className="text-center py-6">
+              <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-3xl">
+                🎉
+              </div>
+              <h2 className="font-serif text-xl font-black text-brown mb-2">
+                You're Subscribed!
+              </h2>
+              <p className="text-brown/60 font-medium text-sm leading-relaxed mb-2">
+                Welcome to the Lammyde community. Check your inbox for your
+                <span className="text-brown font-black"> 10% discount code</span>.
+              </p>
+              <p className="text-xs text-brown/40 font-medium mb-6">
+                Use code <span className="font-black text-brown">GLOW10</span> at booking.
+              </p>
+              <button
+                onClick={handleClose}
+                className="bg-brown text-cream text-sm font-bold px-8 py-3 rounded-full hover:bg-brown/80 transition-colors"
+              >
+                Start Browsing
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

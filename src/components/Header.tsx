@@ -75,7 +75,7 @@ export default function Header() {
                   className="h-12 w-auto object-contain"
                 />
               )}
-              <h1 className="font-verdana text-base font-semibold text-brown">
+              <h1 className="font-verdana text-sm font-semibold text-brown truncate mr-10">
                 {settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
               </h1>
             </Link>
