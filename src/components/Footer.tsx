@@ -20,7 +20,7 @@ export default function Footer() {
             <img
               src={settings.logo_url}
               alt={settings.brand_name ?? 'Logo'}
-              className="h-14 w-auto object-contain mb-3 brightness-200"
+              className="h-14 w-auto object-contain mb-3 border-2 border-blush rounded-lg"
             />
           ) : (
             <h3 className="font-serif text-cream text-xl font-bold mb-3 tracking-wide">

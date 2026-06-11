@@ -3,6 +3,7 @@ import { FiX } from 'react-icons/fi'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useSettings } from '../lib/useSettings'
+import BlurText from './reactbits/BlurText'
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -20,7 +21,7 @@ export default function Header() {
 
   const location = useLocation()
   const navigate = useNavigate()
-  const { data: settings } = useSettings()
+  const { data: settings, isLoading } = useSettings()
 
   const activePath = useMemo(() => location.pathname, [location.pathname])
 
@@ -72,11 +73,16 @@ export default function Header() {
                 <img
                   src={settings.logo_url}
                   alt={settings.brand_name ?? 'Logo'}
-                  className="h-12 w-auto object-contain border-2 border-blush rounded-lg"
+                  className={isLoading ? `h-12 w-32 animate-pulse rounded-lg border-2 border-blush bg-gray-200` :`h-12 w-auto object-contain border-2 border-blush rounded-lg`}
                 />
               )}
-              <h1 className="font-verdana text-sm font-semibold text-brown truncate mr-10">
-                {settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
+              <h1 className="font-verdana text-sm font-semibold text-brown truncate mr-8">
+                {/* {settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'} */}
+                  <BlurText
+                    text={settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
+                    animateBy='words'
+                    direction='top'
+                  />
               </h1>
             </Link>
 
@@ -103,11 +109,16 @@ export default function Header() {
                 <img
                   src={settings.logo_url}
                   alt={settings.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
-                  className="h-16 w-auto object-contain border-2 border-blush rounded-lg"
+                  className={isLoading ? `h-16 w-32 rounded-lg border-2 border-blush bg-gray-200 animate-pulse` : `h-16 w-auto object-contain border-2 border-blush rounded-lg`}
                 />
               )}
               <h1 className="font-verdana text-3xl font-semibold text-brown tracking-wide">
-                {settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
+                {/* {settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'} */}
+                  <BlurText
+                    text={settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
+                    animateBy='words'
+                    direction='top'
+                  />
               </h1>
             </Link>
           </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
 import { SectionHeader, input, label, LogoUpload, AboutImageUpload } from '../AdminCommon'
 
@@ -11,83 +11,89 @@ const fetchSettings = async () => {
 
 export default function SettingsTab() {
   const queryClient = useQueryClient()
-  const { data: settings } = useQuery({ queryKey: ['settings'], queryFn: fetchSettings })
-  const [title, setTitle] = useState('')
-  const [phone, setPhone] = useState('')
-  const [about, setAbout] = useState('')
-  const [logoUrl, setLogoUrl] = useState<string | null>(null)
-  const [aboutPhotoUrl, setAboutPhotoUrl] = useState<string | null>(null)
+  const [values, setValues] = useState<Record<string, string>>({})
   const [saving, setSaving] = useState(false)
-  const [msg, setMsg] = useState('')
-  const [err, setErr] = useState('')
+  const [successMsg, setSuccessMsg] = useState('')
+  const [error, setError] = useState('')
 
-  // initialize local form state when settings arrive (defer to avoid synchronous setState in effect)
-  useEffect(() => {
-    if (settings) {
-      setTimeout(() => {
-        setTitle(settings.title ?? '')
-        setPhone(settings.phone ?? '')
-        setAbout(settings.about ?? '')
-        setLogoUrl(settings.logo_url ?? null)
-        setAboutPhotoUrl(settings.about_photo ?? null)
-      })
-    }
-  }, [settings])
+  const { data: settings, isLoading } = useQuery({ queryKey: ['site-settings-admin'], queryFn: fetchSettings })
+  useEffect(() => { if (settings) setValues(settings) }, [settings])
 
-  const saveMutation = useMutation({
-    mutationFn: async (payload: Record<string, unknown>) => {
-      const { error } = await supabase.from('settings').upsert(payload)
-      if (error) throw error
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['settings'] }),
-  })
+  const set = (key: string, value: string) => setValues(prev => ({ ...prev, [key]: value }))
 
   const handleSave = async () => {
-    setErr(''); setMsg(''); setSaving(true)
-    try {
-      await saveMutation.mutateAsync({ title, phone, about, logo_url: logoUrl, about_photo: aboutPhotoUrl })
-      setMsg('Settings saved!')
-    } catch { setErr('Save failed.') }
-    setSaving(false)
+    setSaving(true); setError(''); setSuccessMsg('')
+    const updates = Object.entries(values).map(([id, value]) => supabase.from('site_settings').upsert({ id, value, updated_at: new Date().toISOString() }))
+    const results = await Promise.all(updates)
+    const failed = results.find(r => r.error)
+    if (failed) { setError('Failed to save some settings.'); setSaving(false); return }
+    setSaving(false); setSuccessMsg('Settings saved!')
+    queryClient.invalidateQueries({ queryKey: ['site-settings'] })
+    queryClient.invalidateQueries({ queryKey: ['site-settings-admin'] })
   }
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-      <div className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
-        <SectionHeader label="Branding" title="Site Settings" />
-        <div className="flex flex-col gap-4">
-          <div><label className={label}>Site Title</label><input value={title} onChange={e => setTitle(e.target.value)} className={input} /></div>
-          <div><label className={label}>Phone</label><input value={phone} onChange={e => setPhone(e.target.value)} className={input} /></div>
-          <div><label className={label}>About Blurb</label><textarea value={about} onChange={e => setAbout(e.target.value)} rows={3} className={`${input} resize-none`} /></div>
-          <div>
-            <label className={label}>Logo</label>
-            <LogoUpload onUploaded={(u) => setLogoUrl(u)} currentUrl={logoUrl ?? undefined} />
-          </div>
-          <div>
-            <label className={label}>About Photo</label>
-            <AboutImageUpload onUploaded={(u) => setAboutPhotoUrl(u)} />
-          </div>
-          {err && <p className="text-xs text-red-400">{err}</p>}
-          {msg && <p className="text-xs text-green-600">{msg}</p>}
-          <button onClick={handleSave} disabled={saving} className="w-full bg-brown text-cream font-bold py-3 rounded-full hover:bg-brown/80 transition-colors text-sm disabled:opacity-50">{saving ? 'Saving...' : 'Save All Settings'}</button>
-        </div>
-      </div>
+  if (isLoading) return <div className="h-64 rounded-2xl bg-blush/30 animate-pulse" />
 
-      <div>
-        <SectionHeader label="Preview" title="Live Preview" />
-        <div className="bg-cream border border-blush/20 rounded-xl p-6">
-          <div className="flex items-center gap-4">
-            {logoUrl ? <img src={logoUrl} className="h-12 object-contain" /> : <div className="h-12 w-24 bg-blush/20 rounded-md" />}
-            <div>
-              <div className="font-serif font-black text-brown text-lg">{title || 'Your Site Title'}</div>
-              <div className="text-sm text-brown/50">{phone || 'Phone number'}</div>
+  const fields: { key: string; label: string; placeholder?: string }[][] = [
+    [
+      { key: 'brand_name', label: 'Brand Name', placeholder: 'e.g. Lammyde Beauty & Spa Lounge' },
+      { key: 'hero_headline', label: 'Hero Headline', placeholder: 'Main headline on the homepage' },
+      { key: 'hero_tagline', label: 'Hero Tagline', placeholder: 'Short description under the headline' },
+      { key: 'about_text', label: 'About Section Text', placeholder: 'Tell your story...' },
+      { key: 'logo_url', label: 'Logo URL', placeholder: 'Auto-filled when you upload below' },
+      { key: 'about_image', label: 'About Photo URL', placeholder: 'Auto-filled when you upload below' },
+    ],
+    [
+      { key: 'contact_email', label: 'Contact Email', placeholder: 'your@email.com' },
+      { key: 'contact_whatsapp', label: 'WhatsApp Number', placeholder: 'Full number without + e.g. 15872233707' },
+      { key: 'contact_location', label: 'Location', placeholder: 'e.g. Airdrie, Alberta, Canada' },
+    ],
+    [
+      { key: 'social_instagram', label: 'Instagram URL', placeholder: 'https://instagram.com/youraccount' },
+      { key: 'social_facebook', label: 'Facebook URL', placeholder: 'https://facebook.com/yourpage' },
+      { key: 'social_tiktok', label: 'TikTok URL', placeholder: 'https://tiktok.com/@youraccount' },
+    ],
+  ]
+
+  const sectionTitles = ['Brand & Content', 'Contact Information', 'Social Media']
+
+  return (
+    <div className="max-w-2xl">
+      <SectionHeader label="Customization" title="Site Settings" />
+      <p className="text-sm font-medium text-brown/60 mb-8 -mt-2">Changes go live immediately after saving.</p>
+      <div className="flex flex-col gap-8">
+        {fields.map((group, gi) => (
+          <div key={gi} className="bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
+            <h3 className="font-serif font-black text-brown text-base mb-5">{sectionTitles[gi]}</h3>
+            <div className="flex flex-col gap-4">
+              {group.map(field => (
+                <div key={field.key}>
+                  <label className={label}>{field.label}</label>
+                  {field.key === 'hero_tagline' || field.key === 'about_text' ? (
+                    <textarea value={values[field.key] ?? ''} onChange={e => set(field.key, e.target.value)} rows={3} placeholder={field.placeholder} className={`${input} resize-none`} />
+                  ) : (
+                    <input value={values[field.key] ?? ''} onChange={e => set(field.key, e.target.value)} placeholder={field.placeholder} className={input} />
+                  )}
+                </div>
+              ))}
             </div>
           </div>
-          <div className="mt-6">
-            <p className="text-sm text-brown/70">{about || 'About blurb preview...'}</p>
-            {aboutPhotoUrl && <img src={aboutPhotoUrl} className="mt-4 w-full rounded-xl object-cover" />}
-          </div>
-        </div>
+        ))}
+      </div>
+      {error && <p className="text-xs text-red-400 mt-4">{error}</p>}
+      {successMsg && <p className="text-xs text-green-600 mt-4">{successMsg}</p>}
+      <button onClick={handleSave} disabled={saving} className="mt-6 w-full bg-brown text-cream font-bold py-3.5 rounded-full hover:bg-brown/80 transition-colors text-sm tracking-wide disabled:opacity-50">
+        {saving ? 'Saving...' : 'Save All Settings'}
+      </button>
+      <div className="mt-6 bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
+        <h3 className="font-serif font-black text-brown text-base mb-2">Upload Logo</h3>
+        <p className="text-xs font-medium text-brown/50 mb-4">PNG with transparent background recommended.</p>
+        <LogoUpload onUploaded={(url) => setValues(prev => ({ ...prev, logo_url: url }))} currentUrl={values['logo_url']} />
+      </div>
+      <div className="mt-6 bg-white border border-blush/40 rounded-2xl shadow-sm p-6">
+        <h3 className="font-serif font-black text-brown text-base mb-2">Upload About / Story Photo</h3>
+        <p className="text-xs font-medium text-brown/50 mb-4">This photo appears on the Our Story page background.</p>
+        <AboutImageUpload onUploaded={(url) => setValues(prev => ({ ...prev, about_image: url }))} />
       </div>
     </div>
   )
