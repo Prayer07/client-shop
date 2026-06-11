@@ -50,7 +50,7 @@ function ServiceCard({ service }: { service: PortfolioService }) {
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-0.5">
             {service.price && !service.is_price_tbd && (
-              <span className="text-sm font-black text-brown">{service.price}</span>
+              <span className="text-sm font-black text-brown">CA${service.price}</span>
             )}
             {service.is_price_tbd && (
               <span className="text-xs font-bold text-gold">Price on consultation</span>
