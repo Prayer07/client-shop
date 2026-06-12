@@ -69,9 +69,15 @@ function PreConsultationForm() {
   const onSubmit = async (data: PreForm) => {
     const { error } = await supabase.from('pre_consultations').insert([data])
     if (error) { console.error(error); return }
+
+    // Fire email notification
+    await supabase.functions.invoke('send-form-email', {
+      body: { type: 'consultation', data },
+    })
+
     setSubmitted(true)
   }
-
+  
   if (submitted) return <SuccessScreen onReset={() => { reset(); setSubmitted(false) }} />
 
   return (

@@ -26,6 +26,12 @@ export default function Contact() {
     setServerError('')
     const { error } = await supabase.from('enquiries').insert([data])
     if (error) { setServerError('Something went wrong. Please try again.'); return }
+
+    // Fire email notification
+    await supabase.functions.invoke('send-form-email', {
+      body: { type: 'contact', data },
+    })
+
     reset()
     setSubmitted(true)
   }
