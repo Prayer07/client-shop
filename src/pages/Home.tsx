@@ -103,8 +103,8 @@ export default function Home() {
                   Book Now
                 </CTAButton>
 
-                <CTAButton to="/portfolio">
-                  View Portfolio
+                <CTAButton to="/services">
+                  View our Services
                 </CTAButton>
               </div>
             </>
