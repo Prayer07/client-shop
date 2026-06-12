@@ -126,7 +126,7 @@ export default function OurStory() {
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <a
-              href="/portfolios"
+              href="/services"
               className="bg-brown text-cream text-sm font-bold px-8 py-3 rounded-full hover:bg-brown/80 transition-colors tracking-wide"
             >
               View Our Services
