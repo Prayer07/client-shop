@@ -1,5 +1,5 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { SmtpClient } from 'https://deno.land/x/smtp@v0.7.0/mod.ts'
+import nodemailer from 'npm:nodemailer'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,12 +17,22 @@ serve(async (req) => {
     const ZOHO_USER = Deno.env.get('ZOHO_SMTP_USER')!
     const ZOHO_PASS = Deno.env.get('ZOHO_SMTP_PASS')!
 
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.zoho.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: ZOHO_USER,
+        pass: ZOHO_PASS,
+      },
+    })
+
     let subject = ''
-    let content = ''
+    let html = ''
 
     if (type === 'contact') {
       subject = `New Enquiry from ${data.name}`
-      content = `
+      html = `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#F7F3EE;padding:32px;border-radius:12px;">
           <div style="background:#4A3A32;padding:24px;border-radius:8px;text-align:center;margin-bottom:24px;">
             <h1 style="color:#F7F3EE;font-size:20px;margin:0;">New Contact Enquiry</h1>
@@ -58,7 +68,7 @@ serve(async (req) => {
 
     if (type === 'consultation') {
       subject = `New Pre-Consultation from ${data.full_name}`
-      content = `
+      html = `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#F7F3EE;padding:32px;border-radius:12px;">
           <div style="background:#4A3A32;padding:24px;border-radius:8px;text-align:center;margin-bottom:24px;">
             <h1 style="color:#F7F3EE;font-size:20px;margin:0;">New Pre-Consultation Form</h1>
@@ -112,24 +122,12 @@ serve(async (req) => {
       `
     }
 
-    const client = new SmtpClient()
-
-    await client.connectTLS({
-      hostname: 'smtp.zoho.com',
-      port: 465,
-      username: ZOHO_USER,
-      password: ZOHO_PASS,
-    })
-
-    await client.send({
+    await transporter.sendMail({
       from: `Lammyde Beauty & Spa Lounge <${ZOHO_USER}>`,
       to: ZOHO_USER,
       subject,
-      content: 'Please view this email in an HTML-compatible client.',
-      html: content,
+      html,
     })
-
-    await client.close()
 
     return new Response(
       JSON.stringify({ success: true }),
@@ -137,9 +135,9 @@ serve(async (req) => {
     )
 
   } catch (err) {
-    console.error(err)
+    console.error('Email error:', err)
     return new Response(
-      JSON.stringify({ error: 'Failed to send email' }),
+      JSON.stringify({ error: String(err) }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
