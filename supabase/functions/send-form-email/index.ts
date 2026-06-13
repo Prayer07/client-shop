@@ -18,7 +18,7 @@ serve(async (req) => {
     const ZOHO_PASS = Deno.env.get('ZOHO_SMTP_PASS')!
 
     const transporter = nodemailer.createTransport({
-      host: 'smtp.zoho.com',
+      host: 'smtp.zohocloud.ca',
       port: 465,
       secure: true,
       auth: {
