@@ -110,7 +110,7 @@ export default function OurStory() {
           <p className="text-cream/60 font-medium text-sm leading-relaxed max-w-lg mx-auto">
             Graduate of Professional and Clinical Aesthetics from the
             <span className="text-gold font-bold"> National Institute of Wellness and Esthetics (N.I.W.E)</span>.
-            Combining technical expertise with a deep passion for beauty and wellness.
+            "Blending aesthetic expertise with a genuine passion for elevating beauty, balance and well-being".
           </p>
         </div>
 
