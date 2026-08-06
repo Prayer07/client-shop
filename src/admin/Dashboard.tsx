@@ -76,9 +76,10 @@ import EnquiriesTab from './tabs/EnquiriesTab'
 import SubscribersTab from './tabs/SubscribersTab'
 import AccountTab from './tabs/AccountTab'
 import NewsletterTab from './tabs/NewsletterTab'
+import GiftCardsTab from './tabs/GiftCardsTab'
 
 // ─── TAB TYPE ─────────────────────────────────────────────────────────────────
-type Tab = 'portfolio_cats' | 'portfolio_services' | 'spa_packages' | 'services' | 'settings' | 'enquiries' | 'subscribers' | 'account' | 'newsletter'
+type Tab = 'portfolio_cats' | 'portfolio_services' | 'spa_packages' | 'services' | 'settings' | 'enquiries' | 'subscribers' | 'account' | 'newsletter' | 'gift_cards'
 
 const tabs: { id: Tab; label: string }[] = [
   // { id: 'products', emoji: '🛍️', label: 'Products' },
@@ -91,6 +92,7 @@ const tabs: { id: Tab; label: string }[] = [
   { id: 'subscribers', label: 'Subscribers' },
   { id: 'account', label: 'Account' },
   { id: 'newsletter', label: 'Newsletter' },
+  { id: 'gift_cards', label: 'Gift Cards' }
 ]
 
 // ─── MAIN DASHBOARD ───────────────────────────────────────────────────────────
@@ -149,6 +151,7 @@ export default function Dashboard() {
         {activeTab === 'subscribers' && <SubscribersTab />}
         {activeTab === 'account' && <AccountTab />}
         {activeTab === 'newsletter' && <NewsletterTab />}
+        {activeTab === 'gift_cards' && <GiftCardsTab />}
       </div>
     </div>
   )

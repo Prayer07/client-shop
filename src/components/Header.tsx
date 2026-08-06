@@ -13,6 +13,7 @@ const navLinks = [
   { label: 'Spa Packages', path: '/spa-packages' },
   { label: 'Consultation', path: '/consultation' },
   { label: 'Contacts', path: '/contact' },
+  { label: 'Gift Cards', path: '/gift-cards' },
 ]
 
 export default function Header() {
