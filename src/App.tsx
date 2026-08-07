@@ -16,6 +16,7 @@ const Consultation = lazy(() => import('./pages/Consultation'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const OurStory = lazy(() => import('./pages/OurStory'))
 const SpaPackage = lazy(() => import('./pages/SpaPackage'))
+const GiftCards = lazy(() => import('./pages/GiftCards'))
 
 export default function App() {
   return (
@@ -44,12 +45,13 @@ export default function App() {
             <Route path="/services" element={<Portfolio />} />
             {/* <Route path="/shop" element={<Shop />} /> */}
             <Route path="/contact" element={<Contact />} />
-            <Route path="/admin" element={<Login />} />
-            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/maina" element={<Login />} />
+            <Route path="/maina/dashboard" element={<Dashboard />} />
             <Route path="/consultation" element={<Consultation />} />
             {/* <Route path="/services" element={<Services />} /> */}
             <Route path="/our-story" element={<OurStory />} />
             <Route path="/spa-packages" element={<SpaPackage />} />
+            <Route path="/gift-cards" element={<GiftCards />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

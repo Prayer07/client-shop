@@ -87,3 +87,37 @@ export interface SiteSettings {
   logo_url: string | null
   about_image: string | null
 }
+
+export interface GiftCardDesign {
+  id: string
+  name: string
+  description: string | null
+  theme_color: string
+  accent_color: string
+  background_color: string
+  image_url: string | null
+  is_active: boolean
+  display_order: number
+  created_at: string
+}
+
+export interface GiftCardDenomination {
+  id: string
+  design_id: string
+  amount: number
+  display_order: number
+}
+
+export interface GiftCardOrder {
+  id: string
+  design_id: string
+  design_name: string
+  amount: number
+  sender_name: string
+  sender_email: string
+  recipient_name: string
+  recipient_email: string
+  personal_message: string | null
+  status: string
+  created_at: string
+}
