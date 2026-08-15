@@ -72,8 +72,8 @@ export default function Home() {
             <ErrorState onRetry={refetch} />
           ) : (
             <>
-              <span className="text-2xl md:text-4xl font-bold text-white uppercase tracking-widest mb-5">
-                Welcome
+              <span className="text-2xl md:text-6xl font-bold text-white uppercase tracking-widest mb-5">
+                Find your glow.Bring out the elevated you.
               </span>
 
               <div className="h-[120px] flex items-center justify-center">
@@ -249,7 +249,7 @@ const AboutSection = memo(({ settings }: { settings: any }) => {
         {/* TEXT */}
         <div>
           <span className="text-xs font-bold text-gold uppercase tracking-widest">
-            About
+            About us
           </span>
 
           <h2 className="font-serif text-3xl md:text-4xl font-black text-brown mt-2 mb-4">
@@ -299,10 +299,10 @@ const AboutSection = memo(({ settings }: { settings: any }) => {
 const CTASection = memo(() => (
   <section className="bg-brown py-20 text-center">
     <h2 className="text-cream font-serif text-4xl font-black mb-4">
-      Have a custom request?
+      Want to book your own spa experience?
     </h2>
     <CTAButton to="/contact" primary>
-      Contact Us
+      Email me at: booking@lammydebeautylounge.com
     </CTAButton>
   </section>
 ))
