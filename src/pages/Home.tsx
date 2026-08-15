@@ -72,7 +72,7 @@ export default function Home() {
             <ErrorState onRetry={refetch} />
           ) : (
             <>
-              <span className="text-2xl md:text-6xl font-bold text-white uppercase tracking-widest mb-5">
+              <span className="text-2xl md:text-4xl font-bold text-white uppercase tracking-widest mb-5">
                 Find your glow.Bring out the elevated you.
               </span>
 
