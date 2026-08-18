@@ -7,9 +7,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        verdana: ['Verdana', 'Geneva', 'Tahoma', 'sans-serif'],
-        serif: ['"Playfair Display"', 'Georgia', 'serif'],
-        sans: ['Inter', 'sans-serif'],
+        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        sans: ['Jost', 'Arial', 'sans-serif'],
+        verdana: ['Verdana', 'Geneva', 'sans-serif'],
       },
       colors: {
         blush: '#E6C7BE',
