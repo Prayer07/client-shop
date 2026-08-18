@@ -83,6 +83,7 @@ export default function Header() {
                     text={settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
                     animateBy='words'
                     direction='top'
+                    className="font-serif"
                   />
               </h1>
             </Link>
