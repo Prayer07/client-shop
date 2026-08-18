@@ -77,7 +77,7 @@ export default function Header() {
                   className={isLoading ? `h-12 w-32 animate-pulse rounded-lg border-2 border-blush bg-gray-200` :`h-12 w-auto object-contain border-2 border-blush rounded-lg`}
                 />
               )}
-              <h1 className="font-verdana text-sm font-semibold text-brown truncate mr-8">
+              <h1 className="text-sm font-semibold text-brown truncate mr-8">
                 {/* {settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'} */}
                   <BlurText
                     text={settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
@@ -113,12 +113,13 @@ export default function Header() {
                   className={isLoading ? `h-16 w-32 rounded-lg border-2 border-blush bg-gray-200 animate-pulse` : `h-16 w-auto object-contain border-2 border-blush rounded-lg`}
                 />
               )}
-              <h1 className="font-verdana text-3xl font-semibold text-brown tracking-wide">
+              <h1 className="text-3xl font-semibold text-brown tracking-wide">
                 {/* {settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'} */}
                   <BlurText
                     text={settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
                     animateBy='words'
                     direction='top'
+                    className="font-serif"
                   />
               </h1>
             </Link>
