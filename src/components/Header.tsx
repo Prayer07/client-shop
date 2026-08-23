@@ -77,7 +77,7 @@ export default function Header() {
                   className={isLoading ? `h-12 w-32 animate-pulse rounded-lg border-2 border-blush bg-gray-200` :`h-12 w-auto object-contain border-2 border-blush rounded-lg`}
                 />
               )}
-              <h1 className="text-2xl font-semibold text-brown truncate mr-3">
+              <h1 className="text-xl font-semibold text-brown truncate mr-8">
                 {/* {settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'} */}
                   <BlurText
                     text={settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}

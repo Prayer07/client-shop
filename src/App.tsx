@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react'
 import Header from './components/Header'
 // import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import FeedbackWidget from './components/FeedbackWidget'
 // import FloatingImg from './components/FloatingImg'
 
 const Home = lazy(() => import('./pages/Home'))
@@ -56,6 +57,7 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
+      <FeedbackWidget/>
       <Footer />
     </div>
   )
