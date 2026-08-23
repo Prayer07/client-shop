@@ -122,6 +122,36 @@ serve(async (req) => {
       `
     }
 
+    if (type === 'feedback') {
+      subject = `New Feedback — ${data.rating} Star${data.rating !== 1 ? 's' : ''}`
+      html = `
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#F7F3EE;padding:32px;border-radius:12px;">
+          <div style="background:#4A3A32;padding:24px;border-radius:8px;text-align:center;margin-bottom:24px;">
+            <h1 style="color:#F7F3EE;font-size:20px;margin:0;">New Client Feedback</h1>
+            <p style="color:#C6A75E;font-size:12px;margin:8px 0 0 0;letter-spacing:2px;text-transform:uppercase;">Lammyde Beauty & Spa Lounge</p>
+          </div>
+          <div style="background:#fff;border:1px solid #E6C7BE;border-radius:8px;padding:24px;">
+            <p style="font-size:32px;text-align:center;margin:0 0 16px 0;">${'★'.repeat(data.rating)}${'☆'.repeat(5 - data.rating)}</p>
+            <table style="width:100%;border-collapse:collapse;">
+              <tr>
+                <td style="padding:10px 0;border-bottom:1px solid #E6C7BE;font-size:12px;color:#8E7F76;font-weight:700;text-transform:uppercase;letter-spacing:1px;width:140px;">Rating</td>
+                <td style="padding:10px 0;border-bottom:1px solid #E6C7BE;font-size:14px;color:#4A3A32;font-weight:600;">${data.rating} / 5 Stars</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 0;border-bottom:1px solid #E6C7BE;font-size:12px;color:#8E7F76;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Service</td>
+                <td style="padding:10px 0;border-bottom:1px solid #E6C7BE;font-size:14px;color:#4A3A32;font-weight:600;">${data.service_type}</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 0;font-size:12px;color:#8E7F76;font-weight:700;text-transform:uppercase;letter-spacing:1px;vertical-align:top;">Feedback</td>
+                <td style="padding:10px 0;font-size:14px;color:#4A3A32;line-height:1.6;">${data.feedback}</td>
+              </tr>
+            </table>
+          </div>
+          <p style="text-align:center;font-size:11px;color:#8E7F76;margin-top:20px;">Lammyde Beauty & Spa Lounge · lammydebeautylounge.com</p>
+        </div>
+      `
+    }
+
     await transporter.sendMail({
       from: `Lammyde Beauty & Spa Lounge <${ZOHO_USER}>`,
       to: ZOHO_USER,

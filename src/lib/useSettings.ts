@@ -72,7 +72,8 @@ export const useSettings = () =>
   useQuery({
     queryKey: ['site-settings'],
     queryFn: fetchSettings,
-    staleTime: 1000 * 60 * 5,
+    // staleTime: 1000 * 60 * 5,
+    staleTime: 0,
     // only use cached initial data if it contains meaningful text (avoid empty-string defaults)
     initialData: (() => {
       const cached = loadFromCache()
