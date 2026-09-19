@@ -154,9 +154,9 @@ export default function Header() {
                   <>
                     <li className="border-l border-blush/40 pl-6">
                       <Link
-                        to="/admin/dashboard"
+                        to="/mainadmin/dashboard"
                         className={`text-sm font-medium ${
-                          activePath === '/admin/dashboard'
+                          activePath === '/mainadmin/dashboard'
                             ? 'text-gold'
                             : 'text-taupe hover:text-gold'
                         }`}
