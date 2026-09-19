@@ -70,13 +70,13 @@ export default function Header() {
           <div className="relative px-6 h-[72px] flex items-center justify-center">
 
             <Link to="/" className="flex items-center gap-3">
-              {settings?.logo_url && (
+              {/* {settings?.logo_url && ( */}
                 <img
-                  src={settings.logo_url}
-                  alt={settings.brand_name ?? 'Logo'}
+                  src="/logo.png"
+                  alt='Logo'
                   className={isLoading ? `h-12 w-32 animate-pulse rounded-lg border-2 border-blush bg-gray-200` :`h-12 w-auto object-contain border-2 border-blush rounded-lg`}
                 />
-              )}
+              {/* )} */}
               <h1 className="text-xl font-semibold text-brown truncate mr-8">
                 {/* {settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'} */}
                   <BlurText
@@ -107,13 +107,13 @@ export default function Header() {
           {/* Brand Name */}
           <div className="max-w-6xl mx-auto py-6 text-center flex items-center justify-center gap-4">
             <Link to="/" className="flex items-center gap-4">
-              {settings?.logo_url && (
+              {/* {settings?.logo_url && ( */}
                 <img
-                  src={settings.logo_url}
-                  alt={settings.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
-                  className={isLoading ? `h-16 w-32 rounded-lg border-2 border-blush bg-gray-200 animate-pulse` : `h-16 w-auto object-contain border-2 border-blush rounded-lg`}
+                  src="/logo.png"
+                  alt='Logo'
+                  className={`h-16 w-auto object-contain border-2 border-blush rounded-lg`}
                 />
-              )}
+              {/* )} */}
               <h1 className="text-3xl font-semibold text-brown tracking-wide">
                 {/* {settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'} */}
                   <BlurText

@@ -27,7 +27,7 @@ export default function OurStory() {
         {settings?.about_image ? (
           <>
             <img
-              src={"/images/img4.webp"}
+              src={"/img4.webp"}
               alt="Lammyde Beauty & Spa Lounge"
               className="absolute inset-0 w-full h-full object-cover opacity-30"
             />
