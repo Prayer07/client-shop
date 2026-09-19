@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useSettings } from '../lib/useSettings'
+import { useSettings } from '../lib/useSettings';
 
 export default function Footer() {
   const { data: settings } = useSettings()
