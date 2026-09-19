@@ -27,7 +27,7 @@ export default function OurStory() {
         {settings?.about_image ? (
           <>
             <img
-              src={"/images/img4.webp"}
+              src={"/img4.webp"}
               alt="Lammyde Beauty & Spa Lounge"
               className="absolute inset-0 w-full h-full object-cover opacity-30"
             />
@@ -126,7 +126,7 @@ export default function OurStory() {
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <a
-              href="/portfolios"
+              href="/services"
               className="bg-brown text-cream text-sm font-bold px-8 py-3 rounded-full hover:bg-brown/80 transition-colors tracking-wide"
             >
               View Our Services

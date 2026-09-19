@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useSettings } from '../lib/useSettings'
+import { useSettings } from '../lib/useSettings';
 
 export default function Footer() {
   const { data: settings } = useSettings()
@@ -40,7 +40,7 @@ export default function Footer() {
               { label: 'Home', path: '/' },
               { label: 'Our Story', path: '/our-story' },
               { label: 'Services', path: '/services' },
-              { label: 'Portfolios', path: '/portfolios' },
+              //{ label: 'Portfolios', path: '/portfolios' },
               { label: 'Spa Packages', path: '/spa-packages' },
               { label: 'Contact', path: '/contact' },
             ].map(link => (

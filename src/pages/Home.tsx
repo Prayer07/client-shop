@@ -7,7 +7,6 @@ import { memo, useMemo } from 'react'
 import Newsletter from '../components/Newsletter'
 import { useSettings } from '../lib/useSettings'
 import { useIntersectionObserver } from '../lib/useIntersectionObserver'
-import heroImg from '../../images/img2.webp'
 import BlurText from '../components/reactbits/BlurText'
 import TextType from '../components/reactbits/TextType'
 
@@ -21,6 +20,8 @@ import TextType from '../components/reactbits/TextType'
 //   if (error) throw new Error(error.message)
 //   return data
 // }
+
+const text3 = "We make self-care accessible so you can reduce stress, feel confident, and be fully present for what matters most. At Lammyde Beauty & Spa Lounge, every treatment is personalized, affordable, and designed to help you reconnect with your best self."
 
 export default function Home() {
   // const { data: featured = [], isLoading } = useQuery({
@@ -38,10 +39,10 @@ export default function Home() {
     refetch,
   } = useSettings()
 
-  const heroHeadline = useMemo(
-    () => settings?.hero_headline || 'Your Brand Headline Goes Here',
-    [settings?.hero_headline]
-  )
+  // const heroHeadline = useMemo(
+  //   () => settings?.hero_headline || 'Your Brand Headline Goes Here',
+  //   [settings?.hero_headline]
+  // )
 
   const heroTagline = useMemo(
     () => settings?.hero_tagline || 'Luxury beauty crafted for you.',
@@ -54,7 +55,7 @@ export default function Home() {
       {/* HERO */}
       <section className="relative overflow-hidden min-h-[calc(100vh-72px)] border-b border-blush/40">
         <img
-          src={heroImg}
+          src="/img1.jpg"
           alt="Hero"
           className="absolute inset-0 -z-20 w-full h-full object-cover"
           loading="eager"
@@ -73,28 +74,29 @@ export default function Home() {
           ) : (
             <>
               <span className="text-2xl md:text-4xl font-bold text-white uppercase tracking-widest mb-5">
-                Find your glow.Bring out the elevated you.
+                Find your glow. Bring out the elevated you.
               </span>
 
-              <div className="h-[120px] flex items-center justify-center">
-                <h1 className="font-serif text-3xl md:text-5xl font-black text-brown max-w-3xl leading-tight">
-                  <TextType
-                    text={[heroHeadline]}
-                    typingSpeed={75}
-                    pauseDuration={1500}
-                    showCursor
-                    cursorCharacter="_"
+              <div className="min-h-[120px] flex items-center justify-center py-4">
+                {/* <h1 className="font-serif text-xl md:text-3xl font-black text-brown max-w-3xl leading-snug"> */}
+                  <BlurText
+                    text={text3}
+                    delay={120}
+                    animateBy="words"
+                    direction="top"
+                    className="font-serif text-xl md:text-3xl font-black text-brown max-w-3xl leading-snug"
                   />
-                </h1>
+                {/* </h1> */}
               </div>
 
-              <div className="h-[40px] flex items-center justify-center">
-                <BlurText
+              <div className="min-h-[40px] flex items-center justify-center">
+                <TextType
                   text={heroTagline}
-                  delay={120}
-                  animateBy="words"
-                  direction="top"
-                  className="text-xl md:text-2xl mt-6 text-brown/75 max-w-xl"
+                  typingSpeed={75}
+                  pauseDuration={1500}
+                  showCursor
+                  cursorCharacter="_"
+                  className="text-2xl md:text-3xl mt-6 text-brown/75 max-w-xl font-serif"
                 />
               </div>
 
@@ -103,8 +105,8 @@ export default function Home() {
                   Book Now
                 </CTAButton>
 
-                <CTAButton to="/portfolio">
-                  View Portfolio
+                <CTAButton to="/services">
+                  View our Services
                 </CTAButton>
               </div>
             </>
