@@ -1,14 +1,15 @@
 import { Link } from 'react-router-dom'
 // import { useQuery } from '@tanstack/react-query'
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 // import { supabase } from '../lib/supabase'
 // import type { Product } from '../types'
 // import ProductCard from '../components/ProductCard'
 import Newsletter from '../components/Newsletter'
 import { useSettings } from '../lib/useSettings'
 import { useIntersectionObserver } from '../lib/useIntersectionObserver'
-import BlurText from '../components/reactbits/BlurText'
+// import BlurText from '../components/reactbits/BlurText'
 import TextType from '../components/reactbits/TextType'
+import BlurText from '../components/reactbits/BlurText'
 
 // const fetchFeaturedProducts = async (): Promise<Product[]> => {
 //   const { data, error } = await supabase
@@ -35,8 +36,8 @@ export default function Home() {
   const {
     data: settings,
     isLoading: settingsLoading,
-    isError: settingsError,
-    refetch,
+    // isError: settingsError,
+    // refetch,
   } = useSettings()
 
   // const heroHeadline = useMemo(
@@ -44,73 +45,73 @@ export default function Home() {
   //   [settings?.hero_headline]
   // )
 
-  const heroTagline = useMemo(
-    () => settings?.hero_tagline || 'Luxury beauty crafted for you.',
-    [settings?.hero_tagline]
-  )
+  // const heroTagline = useMemo(
+  //   () => settings?.hero_tagline || 'Luxury beauty crafted for you.',
+  //   [settings?.hero_tagline]
+  // )
 
   return (
     <div className="flex flex-col">
 
       {/* HERO */}
-      <section className="relative overflow-hidden min-h-[calc(100vh-72px)] border-b border-blush/40">
-        <img
-          src="/img1.jpg"
-          alt="Hero"
-          className="absolute inset-0 -z-20 w-full h-full object-cover"
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
-        />
+      <section className="relative overflow-hidden bg-cream border-b border-blush/40">
 
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-blush/70 via-cream/40 to-transparent" />
+        {/* IMAGE: right side on desktop, fades into the background */}
+        <div className="relative h-[300px] md:absolute md:inset-y-0 md:right-0 md:h-auto md:w-[55%]">
+          <img
+            src="/img1.jpg"
+            alt="Spa treatment at Lammyde Beauty & Spa Lounge"
+            className="h-full w-full object-cover
+              [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)]
+              md:[mask-image:linear-gradient(to_right,transparent_0%,black_45%)]"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+          />
+        </div>
 
-        <div className="max-w-6xl mx-auto px-6 min-h-[calc(100vh-72px)] flex flex-col justify-center items-center text-center">
+        {/* TEXT */}
+        <div className="relative z-10 max-w-6xl mx-auto px-6 py-12 md:min-h-[calc(100vh-72px)] flex items-center">
+          <div className="w-full md:w-1/2 text-center md:text-left">
+            {settingsLoading ? (
+              <HeroSkeleton />
+            ) : (
+              <>
+                {/* optional eyebrow, like "PREMIUM REAL ESTATE" on Oprah */}
+                <span className="text-xs font-bold text-gold uppercase tracking-[0.3em]">
+                  Find your glow
+                </span>
 
-          {settingsLoading ? (
-            <HeroSkeleton />
-          ) : settingsError ? (
-            <ErrorState onRetry={refetch} />
-          ) : (
-            <>
-              <span className="text-2xl md:text-4xl font-bold text-white uppercase tracking-widest mb-5">
-                Find your glow. Bring out the elevated you.
-              </span>
+                <div className="min-h-[96px] md:min-h-[150px] mt-4">
+                  <TextType
+                    text="Radiate Confidence, Embrace You"
+                    typingSpeed={75}
+                    pauseDuration={1500}
+                    showCursor
+                    cursorCharacter="_"
+                    className="font-serif text-4xl md:text-6xl font-black text-brown leading-tight"
+                  />
+                </div>
 
-              <div className="min-h-[120px] flex items-center justify-center py-4">
-                {/* <h1 className="font-serif text-xl md:text-3xl font-black text-brown max-w-3xl leading-snug"> */}
+                <p className="mt-6 font-serif italic text-lg md:text-xl text-brown/75 leading-relaxed max-w-md mx-auto md:mx-0">
                   <BlurText
                     text={text3}
                     delay={120}
                     animateBy="words"
                     direction="top"
-                    className="font-serif text-xl md:text-3xl font-black text-brown max-w-3xl leading-snug"
+                    // className="font-serif text-xl md:text-3xl font-black text-brown max-w-3xl leading-snug"
                   />
-                {/* </h1> */}
-              </div>
+                </p>
 
-              <div className="min-h-[40px] flex items-center justify-center">
-                <TextType
-                  text={heroTagline}
-                  typingSpeed={75}
-                  pauseDuration={1500}
-                  showCursor
-                  cursorCharacter="_"
-                  className="text-2xl md:text-3xl mt-6 text-brown/75 max-w-xl font-serif"
-                />
-              </div>
-
-              <div className="flex gap-4 mt-10">
-                <CTAButton to="/services" primary>
-                  Book Now
-                </CTAButton>
-
-                <CTAButton to="/services">
-                  View our Services
-                </CTAButton>
-              </div>
-            </>
-          )}
+                <div className="flex gap-4 mt-10 justify-center md:justify-start">
+                  <CTAButton to="/services" primary>
+                    Book Now
+                  </CTAButton>
+                  <CTAButton to="/services">View our Services</CTAButton>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </section>
 
@@ -146,17 +147,17 @@ const HeroSkeleton = memo(() => (
   </div>
 ))
 
-const ErrorState = memo(({ onRetry }: { onRetry: () => void }) => (
-  <div className="text-center">
-    <p className="text-brown mb-4">Unable to load content.</p>
-    <button
-      onClick={() => void onRetry()}
-      className="bg-brown text-cream px-6 py-3 rounded-full"
-    >
-      Retry
-    </button>
-  </div>
-))
+// const ErrorState = memo(({ onRetry }: { onRetry: () => void }) => (
+//   <div className="text-center">
+//     <p className="text-brown mb-4">Unable to load content.</p>
+//     <button
+//       onClick={() => void onRetry()}
+//       className="bg-brown text-cream px-6 py-3 rounded-full"
+//     >
+//       Retry
+//     </button>
+//   </div>
+// ))
 
 const CTAButton = memo(
   ({
