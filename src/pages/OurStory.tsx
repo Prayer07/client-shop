@@ -1,5 +1,3 @@
-import { useSettings } from '../lib/useSettings'
-
 const storyParagraphs = [
   `At Lammyde Beauty & Spa Lounge, beauty is more than appearance — it is confidence, care, and the joy reflected in every smile. Our passion has always been rooted in helping people feel beautiful, refreshed, and confident in their own skin.`,
   `The inspiration behind Lammyde began with a simple but powerful lesson from my mother. She often said, "If you love seeing beautiful things, do not just admire them — take a step to create them, because those smiles can bring positive impact to lives around you." Those words became the foundation of a vision built on beauty, purpose, and transformation.`,
@@ -17,25 +15,20 @@ const values = [
 ]
 
 export default function OurStory() {
-  const { data: settings } = useSettings()
 
   return (
     <div className="min-h-screen bg-cream">
 
       {/* Hero — Photo Background */}
       <div className="relative bg-brown overflow-hidden">
-        {settings?.about_image ? (
-          <>
-            <img
-              src={"/img4.webp"}
-              alt="Lammyde Beauty & Spa Lounge"
-              className="absolute inset-0 w-full h-full object-cover opacity-30"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-brown/60 via-brown/40 to-brown/80" />
-          </>
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-brown via-brown/90 to-taupe/80" />
-        )}
+        <>
+          <img
+            src="/img4.webp"
+            alt="Lammyde Beauty & Spa Lounge"
+            className="absolute inset-0 w-full h-full object-cover opacity-30"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-brown/60 via-brown/40 to-brown/80" />
+        </>
 
         <div className="relative max-w-4xl mx-auto px-6 py-28 text-center">
           <span className="text-xs font-bold text-gold uppercase tracking-widest">
