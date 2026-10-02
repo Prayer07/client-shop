@@ -16,9 +16,16 @@ const navLinks = [
   { label: 'Gift Cards', path: '/gift-cards' },
 ]
 
-const glass =
-  'bg-white/30 backdrop-blur-xl backdrop-saturate-150 border border-white/50 ' +
+// border + shadow only (shared by the pills and the drawer)
+const glassEdge =
+  'border border-white/50 ' +
   'shadow-[0_8px_32px_rgba(60,40,30,0.15),inset_0_1px_0_rgba(255,255,255,0.7),inset_0_-1px_0_rgba(255,255,255,0.2)]'
+
+// header pills
+const glass = `bg-white/30 backdrop-blur-xl backdrop-saturate-150 ${glassEdge}`
+
+// drawer: slightly stronger so the text stays readable
+const glassDrawer = `bg-white/40 backdrop-blur-2xl backdrop-saturate-150 ${glassEdge}`
 
 const Sheen = () => (
   <span
@@ -72,6 +79,10 @@ export default function Header() {
     navigate('/')
   }, [navigate])
 
+  const pillWidth = isAdmin ? 'max-w-[90rem]' : 'max-w-6xl'
+  const brandShow = isAdmin ? 'hidden 2xl:block' : 'hidden xl:block'
+  const linkPad = isAdmin ? 'px-3' : 'px-3 lg:px-4'
+
   return (
     <>
       <header className="sticky top-0 z-50 px-4 pt-3 pb-2">
@@ -105,12 +116,12 @@ export default function Header() {
         </div>
 
         {/* DESKTOP */}
-        <div className={`${glass} relative hidden md:flex max-w-[90rem] mx-auto h-16 rounded-full px-3 items-center justify-between gap-4`}>
+        <div className={`${glass} relative hidden md:flex ${pillWidth} mx-auto h-16 rounded-full px-3 items-center justify-between gap-4`}>
           <Sheen />
 
           <Link to="/" className="relative z-10 flex items-center gap-3 pl-1 shrink-0">
             <img src="/logo.png" alt="Logo" className="h-10 w-auto object-contain rounded-full" />
-            <h1 className="hidden 2xl:block whitespace-nowrap text-xl font-semibold text-brown tracking-wide">
+            <h1 className={`${brandShow} whitespace-nowrap text-xl font-semibold text-brown tracking-wide`}>
               <BlurText
                 text={settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
                 animateBy="words"
@@ -128,7 +139,7 @@ export default function Header() {
                   <li key={link.path}>
                     <Link
                       to={link.path}
-                      className={`block whitespace-nowrap rounded-full px-3 py-2 text-[13px] lg:text-sm font-medium transition-all duration-300 ${
+                      className={`block whitespace-nowrap rounded-full ${linkPad} py-2 text-[13px] lg:text-sm font-medium transition-all duration-300 ${
                         isActive
                           ? 'bg-white/60 text-brown shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_2px_8px_rgba(60,40,30,0.12)]'
                           : 'text-brown/70 hover:bg-white/30 hover:text-brown'
@@ -140,6 +151,7 @@ export default function Header() {
                 )
               })}
 
+              {/* admin only: Dashboard pill + sign-out icon */}
               {isAdmin && (
                 <>
                   <li className="ml-2 pl-3 border-l border-white/50">
@@ -181,9 +193,9 @@ export default function Header() {
 
       {/* MOBILE DRAWER: floating glass panel */}
       <div
-        className={`${glass} fixed top-3 right-3 z-50 h-[calc(100%-1.5rem)] w-72 rounded-3xl md:hidden flex flex-col
-          bg-white/40 backdrop-blur-2xl transition-transform duration-300 ${
-          isOpen ? 'translate-x-0' : 'translate-x-[110%]'
+        aria-hidden={!isOpen}
+        className={`${glassDrawer} fixed top-3 right-3 z-50 h-[calc(100dvh-1.5rem)] w-72 rounded-3xl md:hidden flex flex-col transition-transform duration-300 ${
+          isOpen ? 'translate-x-0' : 'translate-x-[110%] pointer-events-none'
         }`}
       >
         <Sheen />
