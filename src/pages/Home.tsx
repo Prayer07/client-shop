@@ -103,11 +103,11 @@ export default function Home() {
                   />
                 </p>
 
-                <div className="flex gap-4 mt-10 justify-center">
+                <div className="flex gap-4 mt-10 justify-center md:justify-start">
                   <CTAButton to="/services" primary>
                     Book Now
                   </CTAButton>
-                  {/* <CTAButton to="/services">View our Services</CTAButton> */}
+                  <CTAButton to="/services">View our Services</CTAButton>
                 </div>
               </>
             )}

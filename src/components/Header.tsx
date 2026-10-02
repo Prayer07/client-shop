@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
-import { FiX } from 'react-icons/fi'
+import { FiLogOut, FiX } from 'react-icons/fi'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useSettings } from '../lib/useSettings'
@@ -105,12 +105,12 @@ export default function Header() {
         </div>
 
         {/* DESKTOP */}
-        <div className={`${glass} relative hidden md:flex max-w-6xl mx-auto h-16 rounded-full px-3 items-center justify-between`}>
+        <div className={`${glass} relative hidden md:flex max-w-[90rem] mx-auto h-16 rounded-full px-3 items-center justify-between gap-4`}>
           <Sheen />
 
-          <Link to="/" className="relative z-10 flex items-center gap-3 pl-1">
+          <Link to="/" className="relative z-10 flex items-center gap-3 pl-1 shrink-0">
             <img src="/logo.png" alt="Logo" className="h-10 w-auto object-contain rounded-full" />
-            <h1 className="hidden xl:block text-xl font-semibold text-brown tracking-wide">
+            <h1 className="hidden 2xl:block whitespace-nowrap text-xl font-semibold text-brown tracking-wide">
               <BlurText
                 text={settings?.brand_name ?? 'Lammyde Beauty & Spa Lounge'}
                 animateBy="words"
@@ -128,7 +128,7 @@ export default function Header() {
                   <li key={link.path}>
                     <Link
                       to={link.path}
-                      className={`block rounded-full px-3 lg:px-4 py-2 text-[13px] lg:text-sm font-medium transition-all duration-300 ${
+                      className={`block whitespace-nowrap rounded-full px-3 py-2 text-[13px] lg:text-sm font-medium transition-all duration-300 ${
                         isActive
                           ? 'bg-white/60 text-brown shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_2px_8px_rgba(60,40,30,0.12)]'
                           : 'text-brown/70 hover:bg-white/30 hover:text-brown'
@@ -142,13 +142,13 @@ export default function Header() {
 
               {isAdmin && (
                 <>
-                  <li className="ml-2 pl-2 border-l border-white/50">
+                  <li className="ml-2 pl-3 border-l border-white/50">
                     <Link
                       to="/mainadmin/dashboard"
-                      className={`block rounded-full px-3 lg:px-4 py-2 text-sm font-medium transition-all ${
+                      className={`block whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-all ${
                         activePath === '/mainadmin/dashboard'
-                          ? 'bg-white/60 text-brown'
-                          : 'text-brown/70 hover:bg-white/30 hover:text-brown'
+                          ? 'bg-brown text-cream shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]'
+                          : 'bg-white/40 text-brown hover:bg-white/60'
                       }`}
                     >
                       Dashboard
@@ -157,9 +157,11 @@ export default function Header() {
                   <li>
                     <button
                       onClick={handleLogout}
-                      className="rounded-full px-3 lg:px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-500/10"
+                      aria-label="Sign out"
+                      title="Sign out"
+                      className="h-10 w-10 flex items-center justify-center rounded-full text-red-500 hover:bg-red-500/10 transition"
                     >
-                      Sign Out
+                      <FiLogOut size={18} />
                     </button>
                   </li>
                 </>
@@ -220,12 +222,18 @@ export default function Header() {
         </div>
 
         {isAdmin && (
-          <div className="relative z-10 px-6 py-5 border-t border-white/40">
+          <div className="relative z-10 px-4 py-5 border-t border-white/40 flex flex-col gap-2">
+            <Link
+              to="/mainadmin/dashboard"
+              className="flex items-center justify-center rounded-2xl bg-brown text-cream px-4 py-3 text-sm font-semibold"
+            >
+              Dashboard
+            </Link>
             <button
               onClick={handleLogout}
-              className="w-full text-sm font-bold text-red-500 hover:text-red-600"
+              className="flex items-center justify-center gap-2 rounded-2xl bg-white/40 border border-white/60 px-4 py-3 text-sm font-semibold text-red-500"
             >
-              Sign Out
+              <FiLogOut /> Sign Out
             </button>
           </div>
         )}
