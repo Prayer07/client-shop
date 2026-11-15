@@ -258,7 +258,7 @@ export default function GiftCardsTab() {
                     <p style={{ color: accentColor }} className="font-serif text-xl font-black">CA$50</p>
                   </div>
                   <div style={{ backgroundColor: accentColor }} className="px-4 py-1 text-center">
-                    <p style={{ color: themeColor }} className="text-xs font-bold">lammydebeautylounge.com</p>
+                    <p style={{ color: themeColor }} className="text-xs font-bold">lammydebeautyspalounge.com</p>
                   </div>
                 </div>
               </div>
